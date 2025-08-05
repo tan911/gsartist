@@ -1,0 +1,145 @@
+import React, { useState, useRef } from "react";
+import type { CalendarFiltersPanelProps } from "@/types";
+import { statusOptions, serviceOptions } from "@/lib/data/mock-data";
+
+function useDropdown(initial = false) {
+  const [open, setOpen] = useState(initial);
+  const ref = useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
+  return { open, setOpen, ref };
+}
+
+export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
+  selectedFilters,
+  onChange,
+}) => {
+  const statusDropdown = useDropdown();
+  const serviceDropdown = useDropdown();
+
+  return (
+    <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Status Filter */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Status
+          </label>
+          <div className="relative" ref={statusDropdown.ref}>
+            <button
+              className="flex items-center justify-between w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+              onClick={() => statusDropdown.setOpen((open) => !open)}
+              type="button"
+              aria-haspopup="listbox"
+              aria-expanded={statusDropdown.open}>
+              <span>
+                {
+                  statusOptions.find(
+                    (opt) => opt.value === selectedFilters.status
+                  )?.label
+                }
+              </span>
+              <svg
+                className="w-4 h-4 text-gray-500"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+            {statusDropdown.open && (
+              <ul
+                className="absolute left-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-10 py-1"
+                role="listbox">
+                {statusOptions.map((option) => (
+                  <li
+                    key={option.value}
+                    className={`px-4 py-2 cursor-pointer hover:bg-purple-50 text-gray-700 ${selectedFilters.status === option.value ? "bg-purple-100 font-semibold text-purple-700" : ""}`}
+                    onClick={() => {
+                      onChange({ ...selectedFilters, status: option.value });
+                      statusDropdown.setOpen(false);
+                    }}
+                    role="option"
+                    aria-selected={selectedFilters.status === option.value}>
+                    {option.label}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+        {/* Service Filter */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Service
+          </label>
+          <div className="relative" ref={serviceDropdown.ref}>
+            <button
+              className="flex items-center justify-between w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+              onClick={() => serviceDropdown.setOpen((open) => !open)}
+              type="button"
+              aria-haspopup="listbox"
+              aria-expanded={serviceDropdown.open}>
+              <span>
+                {
+                  serviceOptions.find(
+                    (opt) => opt.value === selectedFilters.service
+                  )?.label
+                }
+              </span>
+              <svg
+                className="w-4 h-4 text-gray-500"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+            {serviceDropdown.open && (
+              <ul
+                className="absolute left-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-10 py-1"
+                role="listbox">
+                {serviceOptions.map((option) => (
+                  <li
+                    key={option.value}
+                    className={`px-4 py-2 cursor-pointer hover:bg-purple-50 text-gray-700 ${selectedFilters.service === option.value ? "bg-purple-100 font-semibold text-purple-700" : ""}`}
+                    onClick={() => {
+                      onChange({ ...selectedFilters, service: option.value });
+                      serviceDropdown.setOpen(false);
+                    }}
+                    role="option"
+                    aria-selected={selectedFilters.service === option.value}>
+                    {option.label}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
