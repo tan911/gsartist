@@ -4,6 +4,8 @@ import { Header } from "./header";
 import { Sidebar } from "./sidebar";
 import { MenuItem } from "@/types";
 import { notificationsList as mockNotificationsList } from "@/lib/data/mock-data";
+import { UserDataProvider } from "@/lib/context/UserDataContext";
+import { useAuth } from "@/lib/context/AuthContext";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -11,12 +13,7 @@ interface DashboardLayoutProps {
   activeTab: string;
   onTabChange: (tabId: string) => void;
   conversations?: { unread: number }[];
-  user: {
-    name: string;
-    image?: string | null;
-    isArtist?: boolean;
-    email?: string;
-  };
+  refreshInterval?: number; // Optional refresh interval
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
@@ -25,8 +22,9 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   activeTab,
   onTabChange,
   conversations = [],
-  user,
+  refreshInterval = 5 * 60 * 1000, // 5 minutes default
 }) => {
+  const { user, isAuthenticated } = useAuth();
   const [notificationsList, setNotificationsList] = useState(
     mockNotificationsList
   );
@@ -38,25 +36,36 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     );
   };
 
+  // Use mock user data if not authenticated
+  const displayUser = user || {
+    id: "demo-user",
+    name: "Demo User",
+    email: "demo@example.com",
+    isArtist: true,
+    image: null,
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header
-        notificationsList={notificationsList}
-        markNotificationAsRead={markNotificationAsRead}
-        user={user}
-        onOpenSidebar={() => setMobileSidebarOpen(true)}
-      />
-      <div className="flex">
-        <Sidebar
-          menuItems={menuItems}
-          activeTab={activeTab}
-          onTabChange={onTabChange}
-          conversations={conversations}
-          mobileOpen={mobileSidebarOpen}
-          onCloseMobile={() => setMobileSidebarOpen(false)}
+    <UserDataProvider userId={displayUser.id} refreshInterval={refreshInterval}>
+      <div className="min-h-screen bg-gray-50">
+        <Header
+          notificationsList={notificationsList}
+          markNotificationAsRead={markNotificationAsRead}
+          user={displayUser}
+          onOpenSidebar={() => setMobileSidebarOpen(true)}
         />
-        <main className="flex-1 p-2 sm:p-4 lg:p-6">{children}</main>
+        <div className="flex">
+          <Sidebar
+            menuItems={menuItems}
+            activeTab={activeTab}
+            onTabChange={onTabChange}
+            conversations={conversations}
+            mobileOpen={mobileSidebarOpen}
+            onCloseMobile={() => setMobileSidebarOpen(false)}
+          />
+          <main className="flex-1 p-2 sm:p-4 lg:p-6">{children}</main>
+        </div>
       </div>
-    </div>
+    </UserDataProvider>
   );
 };
