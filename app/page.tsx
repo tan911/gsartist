@@ -12,16 +12,21 @@ import LocationTab from "@/components/pages/location-page";
 import SettingsTab from "@/components/pages/settings-page";
 import { MessagesPage } from "@/components/pages/messages-page";
 import { PlaceholderPage } from "@/components/pages/placeholder-page";
-import { menuItems, mockConversations, mockUser } from "@/lib/data/mock-data";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { menuItems, mockConversations } from "@/lib/data/mock-data";
+import { useAuth } from "@/lib/context/AuthContext";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [conversations, setConversations] = useState(mockConversations);
+  const { user } = useAuth();
 
   const renderPageContent = () => {
     switch (activeTab) {
       case "dashboard":
-        return <DashboardPage onTabChange={setActiveTab} />;
+        return (
+          <DashboardPage onTabChange={setActiveTab} userId={user?.id || ""} />
+        );
       case "bookings":
         return <BookingsPage />;
       case "services":
@@ -56,13 +61,14 @@ export default function Home() {
   };
 
   return (
-    <DashboardLayout
-      menuItems={menuItems}
-      activeTab={activeTab}
-      onTabChange={setActiveTab}
-      conversations={conversations}
-      user={mockUser}>
-      {renderPageContent()}
-    </DashboardLayout>
+    <ProtectedRoute>
+      <DashboardLayout
+        menuItems={menuItems}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        conversations={conversations}>
+        {renderPageContent()}
+      </DashboardLayout>
+    </ProtectedRoute>
   );
 }

@@ -1,9 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import { Bell, Menu as MenuIcon } from "lucide-react";
+import { Bell, Menu as MenuIcon, LogOut } from "lucide-react";
 import UnreadBadge from "@/components/messages/UnreadBadge";
 import NotificationPanel from "@/components/messages/NotificationPanel";
 import { UserBadgeModal } from "@/components/ui/UserBadgeModal";
+import { useAuth } from "@/lib/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 interface HeaderProps {
   notificationsList: any[];
@@ -27,6 +29,12 @@ export const Header: React.FC<HeaderProps> = ({
   const [showUserModal, setShowUserModal] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
   const unreadNotifications = notificationsList.filter((n) => !n.read).length;
+  const { logout, isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
@@ -84,6 +92,23 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             )}
           </button>
+          {isAuthenticated ? (
+            <button
+              onClick={handleLogout}
+              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full"
+              aria-label="Logout"
+              type="button">
+              <LogOut className="h-5 w-5" />
+            </button>
+          ) : (
+            <button
+              onClick={() => router.push("/login")}
+              variant="primary"
+              size="sm"
+              className="text-sm">
+              Sign In
+            </button>
+          )}
           <UserBadgeModal
             isOpen={showUserModal}
             onClose={() => setShowUserModal(false)}
