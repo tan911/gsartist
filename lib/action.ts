@@ -1,49 +1,51 @@
 "use server";
 
-import axios, { AxiosError } from "axios";
-
-// import { signIn } from "@/auth.config";
-// import { AuthError } from "next-auth";
+import { BetterAuthError } from "better-auth";
+import { authClient } from "./auth";
+import { error } from "better-auth/api";
 
 export async function authenticate(
 	prevState: string | undefined,
 	formData: FormData
 ) {
 	try {
-		const email = formData.get("email");
-		const password = formData.get("password");
+		const email = formData.get("email") as string;
+		const password = formData.get("password") as string;
+		const name = formData.get("name") as string;
 
-		// TODO: validate
+		const { data, error } = await authClient.signUp.email({
+			name: name, // TODO: ui need to have 'name' field!
+			email: email,
+			password: password,
+			role: "artist",
+		});
 
-		// request to send data
-		const response = await axios.post(
-			"http://localhost:8080/auth/sign-up/email",
-			{
-				name: "Jovan Lanutan",
-				role: "artist",
-				email: email,
-				password: password,
-			},
-			{
-				headers: {
-					"Content-Type": "application/json",
-				},
-			}
-		);
+		console.log(error, data, "-------------------");
 
-		console.log(response, "=================");
-
-		return response;
-
-		// await signIn("credentials", formData);
-	} catch (error) {
-		if (error instanceof AxiosError) {
-			return {
-				message: error.message,
-				status: error.status,
-			};
+		if (error) {
+			// return {
+			// 	success: false,
+			// 	message: error.message || "Registration failed",
+			// 	status: error.status || "error",
+			// };
+			return error.message || "Registration failed";
 		}
 
-		throw error;
+		return "Successful!";
+	} catch (error) {
+		console.error("Authentication error:", error);
+
+		if (error instanceof Error) {
+			return error.message;
+		}
+
+		return "Authetication failed!";
+
+		// return {
+		// 	success: false,
+		// 	message:
+		// 		error instanceof Error ? error.message : "An unexpected error occurred",
+		// 	status: "error",
+		// };
 	}
 }
