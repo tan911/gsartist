@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { Button } from "../ui/button-old";
 import {
@@ -13,18 +14,28 @@ import {
 import { Input } from "../ui/inputLabel";
 import { Label } from "../ui/label";
 import Link from "next/link";
+import { login } from "@/lib/action";
+import { LoadingSpinner } from "../ui/data-loading";
 
 export function LogInForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [state, formAction, isPending] = useActionState(login, undefined);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state === "Successful!") {
+      router.push("/");
+    }
+  }, [state, router]);
 
   return (
-    <Card className="max-w-md mx-auto">
+    <Card className="max-w-lg mx-auto w-full">
       <CardHeader className="text-center">
         <CardTitle className="text-xl">Welcome</CardTitle>
         <CardDescription>Login with your Google account</CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+        <form action={formAction}>
           <div className="grid gap-6 lg:mb-10">
             <Button variant="outline" className="w-full">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -45,9 +56,10 @@ export function LogInForm() {
             <div className="grid gap-3">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-300" />
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-300" />
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="Your@email.com"
                   className="pl-8"
@@ -65,9 +77,10 @@ export function LogInForm() {
                 </a>
               </div>
               <div className="relative">
-                <Lock className="absolute left-3 top-2.5 h-4 w-4 text-gray-300" />
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-300" />
                 <Input
                   id="password"
+                  name="password"
                   type={showPassword ? "text" : "password"}
                   className="pl-8 pr-8"
                   placeholder="Create password"
@@ -76,7 +89,7 @@ export function LogInForm() {
                 <Button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-1 top-0 text-gray-300 p-px bg-transparent cursor-pointer hover:bg-transparent hover:text-gray-700">
+                  className="absolute right-1 top-0.5 text-gray-300 p-px bg-transparent cursor-pointer hover:bg-transparent hover:text-gray-700">
                   {showPassword ? (
                     <EyeOff className="h-4 w-4 text-inherit" />
                   ) : (
@@ -85,8 +98,11 @@ export function LogInForm() {
                 </Button>
               </div>
             </div>
-            <Button type="submit" className="w-full cursor-pointer">
-              Continue
+            <Button
+              type="submit"
+              className="w-full cursor-pointer"
+              disabled={isPending}>
+              {isPending ? <LoadingSpinner /> : "Continue"}
             </Button>
           </div>
         </form>
