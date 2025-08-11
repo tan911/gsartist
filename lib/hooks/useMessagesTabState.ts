@@ -1,15 +1,16 @@
+"use client";
 import { useState } from "react";
 import { Conversation } from "@/types";
 
 export function useMessagesTabState(
-  conversations: Conversation[],
+  conversations: Conversation[] = [],
   setConversations: React.Dispatch<React.SetStateAction<Conversation[]>>
 ) {
   const [selectedConversation, setSelectedConversation] =
     useState<Conversation | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredConversations = conversations.filter((conv) =>
+  const filteredConversations = (conversations || []).filter((conv) =>
     conv.client.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 

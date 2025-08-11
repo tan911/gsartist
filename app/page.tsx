@@ -1,74 +1,28 @@
 "use client";
-import React, { useState } from "react";
-import { DashboardLayout } from "@/components/layout/dashboard-layout";
-import { DashboardPage } from "@/components/pages/dashboard-page";
-import { BookingsPage } from "@/components/pages/bookings-page";
-import { ServicesPage } from "@/components/pages/services-page";
-import { AvailabilityPage } from "@/components/pages/availability-page";
-import { PortfolioPage } from "@/components/pages/portfolio-page";
-import { ReviewsPage } from "@/components/pages/reviews-page";
-import { CalendarPage } from "@/components/pages/calendar-page";
-import LocationTab from "@/components/pages/location-page";
-import SettingsTab from "@/components/pages/settings-page";
-import { MessagesPage } from "@/components/pages/messages-page";
-import { PlaceholderPage } from "@/components/pages/placeholder-page";
-import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { menuItems, mockConversations } from "@/lib/data/mock-data";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState("dashboard");
-  const [conversations, setConversations] = useState(mockConversations);
-  const { user } = useAuth();
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
 
-  const renderPageContent = () => {
-    switch (activeTab) {
-      case "dashboard":
-        return (
-          <DashboardPage onTabChange={setActiveTab} userId={user?.id || ""} />
-        );
-      case "bookings":
-        return <BookingsPage />;
-      case "services":
-        return <ServicesPage />;
-      case "calendar":
-        return <CalendarPage />;
-      case "availability":
-        return <AvailabilityPage />;
-      case "portfolio":
-        return <PortfolioPage />;
-      case "reviews":
-        return <ReviewsPage />;
-      case "location":
-        return <LocationTab />;
-      case "settings":
-        return <SettingsTab />;
-      case "messages":
-        return (
-          <MessagesPage
-            conversations={conversations}
-            setConversations={setConversations}
-          />
-        );
-      default:
-        return (
-          <PlaceholderPage
-            title="Page Not Found"
-            description="The requested page could not be found. Please select a valid option from the navigation menu."
-          />
-        );
+  useEffect(() => {
+    // Redirect to dashboard if authenticated, otherwise to login
+    if (isAuthenticated) {
+      router.push("/dashboard");
+    } else {
+      router.push("/auth/login");
     }
-  };
+  }, [isAuthenticated, router]);
 
+  // Show loading while redirecting
   return (
-    <ProtectedRoute>
-      <DashboardLayout
-        menuItems={menuItems}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        conversations={conversations}>
-        {renderPageContent()}
-      </DashboardLayout>
-    </ProtectedRoute>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Redirecting...</p>
+      </div>
+    </div>
   );
 }

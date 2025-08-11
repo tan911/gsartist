@@ -1,11 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import { Bell, Menu as MenuIcon, LogOut } from "lucide-react";
-import UnreadBadge from "@/components/messages/UnreadBadge";
-import NotificationPanel from "@/components/messages/NotificationPanel";
+import UnreadBadge from "@/app/dashboard/messages/_components/UnreadBadge";
+import NotificationPanel from "@/app/dashboard/messages/_components/NotificationPanel";
 import { UserBadgeModal } from "@/components/ui/UserBadgeModal";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/buttonnew";
 
 interface HeaderProps {
   notificationsList: any[];
@@ -41,20 +42,20 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center space-x-4">
           {/* Hamburger menu for mobile */}
-          <button
+          <Button
             className="md:hidden mr-2 p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-400"
             onClick={onOpenSidebar}
             aria-label="Open sidebar menu"
             type="button">
             <MenuIcon className="h-6 w-6 text-gray-700" />
-          </button>
+          </Button>
           <h1 className="text-xl font-bold text-gray-900">
             GlowSimcha Artist Dashboard
           </h1>
         </div>
         <div className="flex items-center space-x-4">
-          <div className="relative">
-            <button
+          {/* <div className="relative">
+            <Button
               onClick={() => setShowNotificationPanel(!showNotificationPanel)}
               className="relative p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full"
               aria-label="Show notifications">
@@ -62,7 +63,7 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="absolute -top-1 -right-1">
                 <UnreadBadge count={unreadNotifications} />
               </span>
-            </button>
+            </Button>
             {showNotificationPanel && (
               <NotificationPanel
                 notificationsList={notificationsList}
@@ -70,9 +71,9 @@ export const Header: React.FC<HeaderProps> = ({
                 onMarkRead={markNotificationAsRead}
               />
             )}
-          </div>
-          <button
-            className="w-10 h-10 rounded-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-purple-400 border-2 border-white shadow-md transition-transform duration-150 hover:scale-105 hover:ring-4 hover:ring-purple-200 bg-gradient-to-br from-purple-500 to-pink-500"
+          </div> */}
+          <Button
+            className="w-10 h-10 rounded-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-md transition-transform duration-150 hover:scale-105 hover:ring-4 hover:ring-purple-200 bg-gradient-to-br from-purple-500 to-pink-500"
             onClick={() => setShowUserModal(true)}
             aria-label="Show user badge"
             type="button">
@@ -84,30 +85,30 @@ export const Header: React.FC<HeaderProps> = ({
                 onError={() => setAvatarError(true)}
               />
             ) : (
-              <span className="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold text-lg select-none">
+              <span className="flex items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold text-lg select-none">
                 {user.name
                   .split(" ")
                   .map((n) => n[0])
                   .join("")}
               </span>
             )}
-          </button>
+          </Button>
           {isAuthenticated ? (
-            <button
+            <Button
               onClick={handleLogout}
               className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full"
               aria-label="Logout"
               type="button">
               <LogOut className="h-5 w-5" />
-            </button>
+            </Button>
           ) : (
-            <button
+            <Button
               onClick={() => router.push("/login")}
               variant="primary"
               size="sm"
               className="text-sm">
               Sign In
-            </button>
+            </Button>
           )}
           <UserBadgeModal
             isOpen={showUserModal}
