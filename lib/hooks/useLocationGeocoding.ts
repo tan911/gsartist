@@ -5,7 +5,7 @@ import { LocationFormData } from "@/types";
 import {
   geocodeAddress,
   reverseGeocode,
-} from "@/components/location/geocoding-service";
+} from "@/app/dashboard/location/_components/geocoding-service";
 
 // Import the Notification type from the location components
 export type Notification = {

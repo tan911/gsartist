@@ -1,6 +1,6 @@
 import React from "react";
 import { Loader2, AlertCircle, RefreshCw } from "lucide-react";
-import { Button } from "./button";
+import { Button } from "./buttonnew";
 
 interface LoadingSpinnerProps {
   size?: "sm" | "md" | "lg";
@@ -50,7 +50,7 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
         {onRetry && (
           <Button
             onClick={onRetry}
-            variant="outline"
+            variant="primary"
             className="flex items-center space-x-2">
             <RefreshCw className="w-4 h-4" />
             <span>Try Again</span>

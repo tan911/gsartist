@@ -1,7 +1,8 @@
 "use client";
 import React, { useEffect } from "react";
 import { MenuItem } from "@/types";
-import UnreadBadge from "@/components/messages/UnreadBadge";
+import UnreadBadge from "@/app/dashboard/messages/_components/UnreadBadge";
+import { useRouter, usePathname } from "next/navigation";
 
 interface SidebarProps {
   menuItems: MenuItem[];
@@ -20,6 +21,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   mobileOpen = false,
   onCloseMobile,
 }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+
   // Close on ESC for accessibility
   useEffect(() => {
     if (!mobileOpen) return;
@@ -29,6 +33,48 @@ export const Sidebar: React.FC<SidebarProps> = ({
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, [mobileOpen, onCloseMobile]);
+
+  // Function to handle navigation
+  const handleNavigation = (itemId: string) => {
+    onTabChange(itemId);
+    if (onCloseMobile) onCloseMobile();
+
+    // Navigate to the appropriate route
+    switch (itemId) {
+      case "dashboard":
+        router.push("/dashboard");
+        break;
+      case "bookings":
+        router.push("/dashboard/bookings");
+        break;
+      case "calendar":
+        router.push("/dashboard/calendar");
+        break;
+      case "services":
+        router.push("/dashboard/services");
+        break;
+      case "availability":
+        router.push("/dashboard/availability");
+        break;
+      case "portfolio":
+        router.push("/dashboard/portfolio");
+        break;
+      case "messages":
+        router.push("/dashboard/messages");
+        break;
+      case "reviews":
+        router.push("/dashboard/reviews");
+        break;
+      case "location":
+        router.push("/dashboard/location");
+        break;
+      case "settings":
+        router.push("/dashboard/settings");
+        break;
+      default:
+        router.push("/dashboard");
+    }
+  };
 
   // Sidebar content
   const sidebarContent = (
@@ -57,10 +103,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         return (
           <button
             key={item.id}
-            onClick={() => {
-              onTabChange(item.id);
-              if (onCloseMobile) onCloseMobile();
-            }}
+            onClick={() => handleNavigation(item.id)}
             className={`w-full flex justify-center md:justify-between items-center px-4 py-3 text-left rounded-lg transition-colors ${
               isActive
                 ? "bg-purple-50 text-purple-700 font-medium"
@@ -113,10 +156,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               return (
                 <button
                   key={item.id}
-                  onClick={() => {
-                    onTabChange(item.id);
-                    if (onCloseMobile) onCloseMobile();
-                  }}
+                  onClick={() => handleNavigation(item.id)}
                   className={`relative flex flex-col items-center justify-center w-12 h-12 rounded-lg transition-colors text-xl ${
                     isActive
                       ? "bg-purple-50 text-purple-700 font-medium"

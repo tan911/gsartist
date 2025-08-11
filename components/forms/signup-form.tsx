@@ -28,7 +28,7 @@ export function SignUpForm() {
 
   useEffect(() => {
     if (state === "Successful!") {
-      router.push("/");
+      router.push("/dashboard");
     }
   }, [state, router]);
 

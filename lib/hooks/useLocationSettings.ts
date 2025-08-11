@@ -1,3 +1,4 @@
+"use client";
 import { useState, useCallback } from "react";
 import { LocationSettings } from "@/types";
 import { defaultLocationSettings } from "@/lib/data/mock-data";

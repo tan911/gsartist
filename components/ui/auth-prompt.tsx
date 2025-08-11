@@ -34,11 +34,11 @@ export const AuthPrompt: React.FC<AuthPromptProps> = ({
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button
-            onClick={() => router.push("/auth/login")}
+            onClick={() => router.push("/dashboard/settings")}
             variant="primary"
             size="sm"
             className="w-full sm:w-auto">
-            Sign In
+            Manage My Account
           </Button>
 
           {showSignup && (
@@ -47,7 +47,7 @@ export const AuthPrompt: React.FC<AuthPromptProps> = ({
               variant="outline"
               size="sm"
               className="w-full sm:w-auto">
-              Create Account
+              Logout
             </Button>
           )}
         </div>
