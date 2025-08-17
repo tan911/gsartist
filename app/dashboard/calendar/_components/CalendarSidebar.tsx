@@ -1,6 +1,10 @@
 import React from "react";
 import { Calendar, XCircle } from "lucide-react";
 import { BookingCard } from "@/app/dashboard/bookings/_components/booking-card";
+import { Heading4 } from "@/components/typography/Heading4";
+import { Meta } from "@/components/typography/Meta";
+import { cn } from "@/lib/utils";
+import { Paragraph } from "@/components/typography/Paragraph";
 
 interface CalendarSidebarProps {
   selectedDate: Date | null;
@@ -49,30 +53,33 @@ export const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
     .slice(0, 3);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 md:space-y-4">
       {/* Selected Date Info */}
       {selectedDate && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <h3 className="font-semibold text-gray-900 mb-3">
+          <Heading4 className={cn("text-left text-gray-900 mb-4")}>
             {selectedDate.toLocaleDateString("en-US", {
               weekday: "long",
               year: "numeric",
               month: "long",
               day: "numeric",
             })}
-          </h3>
+          </Heading4>
           {(() => {
             const dayBookings = getBookingsForDate(selectedDate);
             const blockedInfo = getBlockedInfoForDate(selectedDate);
             if (blockedInfo) {
               return (
-                <div className="flex items-center p-3 bg-red-50 border border-red-200 rounded-lg">
-                  <XCircle className="h-5 w-5 text-red-500 mr-2" />
+                <div className="flex items-center p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <XCircle className="h-5 w-5 text-red-500 mr-3 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-red-800">
+                    <Paragraph
+                      className={cn("text-left font-semibold text-red-800")}>
                       Blocked Day
-                    </p>
-                    <p className="text-xs text-red-600">{blockedInfo.reason}</p>
+                    </Paragraph>
+                    <Meta className={cn("text-left font-light text-red-600")}>
+                      {blockedInfo.reason}
+                    </Meta>
                   </div>
                 </div>
               );
@@ -80,13 +87,12 @@ export const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
             if (dayBookings.length === 0) {
               return (
                 <div className="text-center py-4">
-                  <Calendar className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-500">
+                  <Calendar className="h-8 w-8 text-gray-600 mx-auto mb-2" />
+
+                  <Paragraph
+                    className={cn("text-center font-light text-gray-900")}>
                     No bookings for this day
-                  </p>
-                  <button className="mt-2 text-sm text-purple-600 hover:text-purple-700 font-medium">
-                    Add Availability
-                  </button>
+                  </Paragraph>
                 </div>
               );
             }
@@ -106,19 +112,27 @@ export const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
       )}
       {/* Quick Stats */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-        <h3 className="font-semibold text-gray-900 mb-4">This Month</h3>
-        <div className="space-y-3">
+        <Heading4 className={cn("text-left text-gray-900 mb-4")}>
+          This Month
+        </Heading4>
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">Total Bookings</span>
-            <span className="font-semibold text-gray-900">{total}</span>
+            <Meta className={cn("text-left text-gray-600")}>
+              Total Bookings
+            </Meta>
+            <span className="font-semibold text-gray-900 text-lg">{total}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">Confirmed</span>
-            <span className="font-semibold text-green-600">{confirmed}</span>
+            <Meta className={cn("text-left text-gray-600")}>Confirmed</Meta>
+            <span className="font-semibold text-green-600 text-lg">
+              {confirmed}
+            </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">Pending</span>
-            <span className="font-semibold text-yellow-600">{pending}</span>
+            <Meta className={cn("text-left text-gray-600")}>Pending</Meta>
+            <span className="font-semibold text-yellow-600 text-lg">
+              {pending}
+            </span>
           </div>
         </div>
       </div>

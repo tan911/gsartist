@@ -12,7 +12,7 @@ export const MessagesPage = ({
   setConversations,
 }: MessagesPageProps) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 md:space-y-4">
       <div className="flex items-center justify-between">
         <MessagesTab
           conversations={conversations}

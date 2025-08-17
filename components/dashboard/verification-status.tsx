@@ -2,6 +2,8 @@ import React from "react";
 import { Mail, Phone, Shield, CheckCircle, AlertCircle } from "lucide-react";
 import { VerificationItem } from "@/types";
 import { verificationItems } from "@/lib/data/mock-data";
+import { Heading3 } from "../typography/Heading3";
+import { cn } from "@/lib/utils";
 
 export const VerificationStatus: React.FC = () => {
   const getStatusIcon = (status: VerificationItem["status"]) => {
@@ -27,10 +29,10 @@ export const VerificationStatus: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-8">
+      <Heading3 className={cn("mb-1 md:mb-2 text-left text-gray-900")}>
         Verification Status
-      </h3>
+      </Heading3>
       <div className="space-y-4">
         {verificationItems.map((item) => {
           const Icon = item.icon;

@@ -90,7 +90,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ className = "" }) => {
 
       default:
         return (
-          <div className="space-y-6">
+          <div className="space-y-2 md:space-y-4">
             <div className="border-b border-gray-200 pb-4 mb-6">
               <div className="flex items-center">
                 <SettingsIcon className="h-5 w-5 text-purple-600 mr-2" />

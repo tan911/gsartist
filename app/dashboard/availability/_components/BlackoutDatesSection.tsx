@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/inputLabel";
 import { Button } from "@/components/ui/buttonnew";
 import { Plus, X } from "lucide-react";
 import { BlackoutDate } from "@/types";
+import { Heading3 } from "@/components/typography/Heading3";
+import { cn } from "@/lib/utils";
 
 interface BlackoutDatesSectionProps {
   blackoutDates: BlackoutDate[];
@@ -26,10 +28,12 @@ export const BlackoutDatesSection: React.FC<BlackoutDatesSectionProps> = ({
   onRemove,
   disabled = false,
 }) => (
-  <Card className="p-6">
-    <h3 className="text-lg font-semibold text-gray-900 mb-4">Blackout Dates</h3>
-    <div className="bg-gray-50 rounded-lg p-4 mb-4">
-      <div className="flex items-end space-x-4">
+  <Card className="p-4 md:p-8">
+    <Heading3 className={cn("text-left text-gray-900")}>
+      Blackout Dates
+    </Heading3>
+    <div className="bg-gray-50 rounded-lg p-2 md:p-4">
+      <div className="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
         <Input
           type="date"
           label="Date"
@@ -45,17 +49,21 @@ export const BlackoutDatesSection: React.FC<BlackoutDatesSectionProps> = ({
           onChange={(e) => onReasonChange(e.target.value)}
           disabled={disabled}
         />
-        <Button onClick={onAdd} disabled={disabled}>
+        <Button
+          onClick={onAdd}
+          disabled={disabled}
+          size="lg"
+          className="max-w-[90px] ">
           <Plus className="h-4 w-4 mr-2" />
           Add
         </Button>
       </div>
     </div>
-    <div className="space-y-2">
+    <div className="space-y-1 md:space-y-2">
       {blackoutDates.map((blackout) => (
         <div
           key={blackout.id}
-          className="flex items-center justify-between p-3 bg-red-50 border border-red-200 rounded-md">
+          className="flex items-center justify-between p-2 md:p-4 bg-red-50 border border-red-200 rounded-md">
           <div>
             <span className="font-medium text-gray-900">{blackout.date}</span>
             <span className="text-gray-600 ml-3">{blackout.reason}</span>

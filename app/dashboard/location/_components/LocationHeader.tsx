@@ -1,5 +1,7 @@
 import React from "react";
 import { Settings, Save } from "lucide-react";
+import { Heading2 } from "@/components/typography/Heading2";
+import { cn } from "@/lib/utils";
 
 interface LocationHeaderProps {
   isEditing: boolean;
@@ -18,7 +20,7 @@ const LocationHeader: React.FC<LocationHeaderProps> = ({
 }) => (
   <div className="flex items-center justify-between">
     <div>
-      <h2 className="text-2xl font-bold text-gray-900">Location Settings</h2>
+      <Heading2 className={cn("text-left text-gray-900")}>Location</Heading2>
       <p className="text-gray-600 mt-1">
         Manage your service location and travel preferences
       </p>

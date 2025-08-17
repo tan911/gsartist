@@ -10,6 +10,8 @@ import {
   mockUser,
 } from "@/lib/data/mock-data";
 import { Modal } from "@/components/ui/modal";
+import { Heading2 } from "@/components/typography/Heading2";
+import { cn } from "@/lib/utils";
 
 const categories = ["All", "Hair", "Makeup", "Combo"];
 
@@ -91,11 +93,11 @@ export default function PortfolioPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 md:space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">
+        <Heading2 className={cn("text-left text-gray-900")}>
           Portfolio Management
-        </h2>
+        </Heading2>
         <button
           onClick={() => setShowUploadModal(true)}
           className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 flex items-center">

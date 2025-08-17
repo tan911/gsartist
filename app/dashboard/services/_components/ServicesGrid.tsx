@@ -13,7 +13,7 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({
   onEdit,
   onDelete,
 }) => (
-  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
     {services.map((service) => (
       <ServiceCard
         key={service.id}

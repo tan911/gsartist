@@ -19,13 +19,13 @@ const BookingSettingsSection: React.FC<BookingSettingsSectionProps> = ({
   bookingSettings,
   onBookingSettingsUpdate,
 }) => (
-  <div className="space-y-6">
+  <div className="space-y-2 md:space-y-4">
     <SectionHeader
       title="Booking Settings"
       description="Configure how clients can book your services"
       icon={Calendar}
     />
-    <div className="space-y-6">
+    <div className="space-y-2 md:space-y-4">
       <BookingConfirmationMode
         confirmationMode={bookingSettings.confirmationMode}
         onChange={(value) =>

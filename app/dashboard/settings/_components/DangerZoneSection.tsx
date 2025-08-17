@@ -20,7 +20,7 @@ const DangerZoneSection: React.FC<DangerZoneSectionProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 md:space-y-4">
       <SectionHeader
         title="Danger Zone"
         description="Irreversible actions that will affect your account"

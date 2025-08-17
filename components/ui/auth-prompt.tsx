@@ -3,6 +3,9 @@ import React from "react";
 import { Button } from "@/components/ui/buttonnew";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { Heading1 } from "../typography/Heading1";
+import { Paragraph } from "../typography/Paragraph";
+import { cn } from "@/lib/utils";
 
 interface AuthPromptProps {
   title?: string;
@@ -27,27 +30,27 @@ export const AuthPrompt: React.FC<AuthPromptProps> = ({
 
   return (
     <div
-      className={`bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-6 ${className}`}>
+      className={`bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-4 md:p-8 ${className}`}>
       <div className="text-center">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
-        <p className="text-sm text-gray-600 mb-4">{message}</p>
-
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <Heading1 className={cn("mb-1 md:mb-2 text-center")}>{title}</Heading1>
+        <Paragraph className={cn("mb-2 md:mb-4 text-center")}>
+          {message}
+        </Paragraph>
+        <div className="flex flex-row gap-3 justify-center">
           <Button
             onClick={() => router.push("/dashboard/settings")}
             variant="primary"
             size="sm"
-            className="w-full sm:w-auto">
+            className="w-[160px] sm:w-[200px]">
             Manage My Account
           </Button>
-
           {showSignup && (
             <Button
-              onClick={() => router.push("/auth/signup")}
+              onClick={() => router.push("/auth/reviews")}
               variant="outline"
               size="sm"
-              className="w-full sm:w-auto">
-              Logout
+              className="w-[80px] sm:w-[100px]">
+              Reviews
             </Button>
           )}
         </div>
@@ -58,7 +61,7 @@ export const AuthPrompt: React.FC<AuthPromptProps> = ({
 
 // Banner version for top of pages
 export const AuthBanner: React.FC<AuthPromptProps> = (props) => {
-  return <AuthPrompt {...props} className="mb-6" />;
+  return <AuthPrompt {...props} className="mb-4" />;
 };
 
 // Inline version for specific sections

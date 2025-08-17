@@ -56,7 +56,7 @@ export default function ServicesPage() {
       : services.filter((service) => service.category === activeCategory);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 md:space-y-4">
       <ServiceHeader
         onAdd={() => {
           setEditingService(null);

@@ -47,7 +47,7 @@ export default function CalendarPage() {
   const days = getDaysInMonth(currentDate);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 md:space-y-4">
       <CalendarHeader
         currentDate={currentDate}
         onPrevMonth={() =>
@@ -74,7 +74,7 @@ export default function CalendarPage() {
           onChange={setSelectedFilters}
         />
       )}
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="space-y-2 md:space-y-4">
         {/* Calendar */}
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -92,17 +92,19 @@ export default function CalendarPage() {
           </div>
         </div>
         {/* Sidebar */}
-        <CalendarSidebar
-          selectedDate={selectedDate}
-          getBookingsForDate={(date) =>
-            getBookingsForDate(date, filteredBookings)
-          }
-          getBlockedInfoForDate={(date) =>
-            getBlockedInfoForDate(date, calendarBlockedDates)
-          }
-          bookings={filteredBookings}
-          currentDate={currentDate}
-        />
+        <div className="lg:col-span-1">
+          <CalendarSidebar
+            selectedDate={selectedDate}
+            getBookingsForDate={(date) =>
+              getBookingsForDate(date, filteredBookings)
+            }
+            getBlockedInfoForDate={(date) =>
+              getBlockedInfoForDate(date, calendarBlockedDates)
+            }
+            bookings={filteredBookings}
+            currentDate={currentDate}
+          />
+        </div>
       </div>
     </div>
   );

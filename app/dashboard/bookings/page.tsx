@@ -122,16 +122,18 @@ export default function BookingsPage() {
   const filteredBookings = filterByDateRange(bookings, dateRange);
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-6xl mx-auto space-y-2 md:space-y-4">
       <BookingsHeader dateRange={dateRange} setDateRange={setDateRange} />
       <BookingsTabSection activeTab={activeTab} onTabChange={setActiveTab} />
-      <BookingsContent
-        activeTab={activeTab}
-        bookings={filteredBookings}
-        onAccept={handleAccept}
-        onCancel={handleCancel}
-        onComplete={handleComplete}
-      />
+      <div className="bg-gray-50 rounded-xl ">
+        <BookingsContent
+          activeTab={activeTab}
+          bookings={filteredBookings}
+          onAccept={handleAccept}
+          onCancel={handleCancel}
+          onComplete={handleComplete}
+        />
+      </div>
     </div>
   );
 }

@@ -78,7 +78,7 @@ export default function Dashboard() {
       </DashboardSection>
 
       {/* Recent Reviews and Verification Status */}
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-4">
         <DashboardSection
           title="Recent Reviews"
           onViewAll={() => handleTabChange("reviews")}>

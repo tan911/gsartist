@@ -37,7 +37,7 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
       error={error}
       onRetry={onRetry}
       loadingText={loadingText}>
-      <div className={cn("space-y-6", className)}>
+      <div className={cn("space-y-2 md:space-y-4", className)}>
         {/* Auth Banner for unauthenticated users */}
         {showAuthBanner && (
           <AuthBanner title={authBannerTitle} message={authBannerMessage} />

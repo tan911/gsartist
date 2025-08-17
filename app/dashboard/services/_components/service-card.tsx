@@ -2,6 +2,8 @@ import React from "react";
 import { Clock, Edit, Trash2 } from "lucide-react";
 import { Service } from "@/types";
 import { Button } from "@/components/ui/buttonnew";
+import { Heading4 } from "@/components/typography/Heading4";
+import { cn } from "@/lib/utils";
 
 interface ServiceCardProps {
   service: Service;
@@ -15,9 +17,11 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
   onDelete,
 }) => {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-md transition-shadow hover:shadow-lg">
+    <div className="bg-white rounded-lg border border-gray-200 p-2 md:p-4 shadow-sm transition-shadow hover:shadow-lg">
       <div className="flex items-center justify-between mb-2">
-        <h4 className="font-semibold text-gray-900">{service.name}</h4>
+        <Heading4 className={cn("text-left text-gray-900")}>
+          {service.name}
+        </Heading4>
         <div className="flex items-center space-x-2">
           <Button
             variant="ghost"

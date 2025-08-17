@@ -26,13 +26,13 @@ const AccountSecuritySection: React.FC<AccountSecuritySectionProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 md:space-y-4">
       <SectionHeader
         title="Account Security"
         description="Manage your password and security settings"
       />
 
-      <form onSubmit={onSubmit} className="space-y-6">
+      <form onSubmit={onSubmit} className="space-y-2 md:space-y-4">
         <FormGroup label="Current Password" required>
           <div className="relative">
             <input

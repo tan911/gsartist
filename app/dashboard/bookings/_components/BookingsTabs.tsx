@@ -11,16 +11,16 @@ export const BookingsTabs: React.FC<BookingsTabsProps> = ({
   activeTab,
   onTabChange,
 }) => (
-  <div className="border-b border-gray-200">
-    <nav className="-mb-px flex space-x-8">
+  <div className="border-b border-gray-200 bg-white rounded-lg">
+    <nav className="flex p-1">
       {tabs.map((tab) => (
         <button
           key={tab}
           onClick={() => onTabChange(tab)}
-          className={`py-2 px-1 border-b-2 font-medium text-sm ${
+          className={`px-2 py-1.5 md:px-4 md:py-2.5 rounded-md font-medium text-sm transition-all duration-200 ${
             tab === activeTab
-              ? "border-purple-500 text-purple-600"
-              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              ? "bg-purple-100 text-purple-700 border border-purple-200 shadow-sm"
+              : "text-gray-600 hover:text-gray-800 hover:bg-gray-50 border border-transparent"
           }`}>
           {tab}
         </button>

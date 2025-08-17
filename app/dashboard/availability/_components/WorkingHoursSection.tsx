@@ -1,6 +1,9 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { DayOfWeek, WeeklyWorkingHours } from "@/types";
+import { Heading3 } from "@/components/typography/Heading3";
+import { cn } from "@/lib/utils";
+import { Meta } from "@/components/typography/Meta";
 
 interface WorkingHoursSectionProps {
   days: DayOfWeek[];
@@ -17,13 +20,14 @@ export const WorkingHoursSection: React.FC<WorkingHoursSectionProps> = ({
   onChange,
   disabled = false,
 }) => (
-  <Card className="p-6">
-    <h3 className="text-lg font-semibold text-gray-900 mb-4">Working Hours</h3>
-    <div className="space-y-4">
+  <Card className="p-4 md:p-8">
+    {" "}
+    <Heading3 className={cn("text-left text-gray-900")}>Working Hours</Heading3>
+    <div className="space-y-0">
       {days.map((day) => (
         <div
           key={day}
-          className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
+          className="flex items-center justify-between py-2 md:py-4 border-b border-gray-100 last:border-b-0">
           <div className="flex items-center space-x-4">
             <input
               type="checkbox"
@@ -32,30 +36,32 @@ export const WorkingHoursSection: React.FC<WorkingHoursSectionProps> = ({
               className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
               disabled={disabled}
             />
-            <span className="font-medium text-gray-900 w-20">
+            <Meta className={cn("font-medium text-gray-900 w-22")}>
               {dayLabels[day]}
-            </span>
+            </Meta>
           </div>
           {workingHours[day].enabled ? (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1 md:space-x-2">
               <input
                 type="time"
                 value={workingHours[day].start}
                 onChange={(e) => onChange(day, "start", e.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-1 text-sm"
+                className="border border-gray-300 rounded-md px-2 py-1 text-xs md:text-sm"
                 disabled={disabled}
               />
-              <span className="text-gray-500">to</span>
+              <Meta className={cn("font-medium text-gray-900")}>to</Meta>
               <input
                 type="time"
                 value={workingHours[day].end}
                 onChange={(e) => onChange(day, "end", e.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-1 text-sm"
+                className="border border-gray-300 rounded-md px-2 py-1 text-xs md:text-sm"
                 disabled={disabled}
               />
             </div>
           ) : (
-            <span className="text-gray-500 text-sm">Unavailable</span>
+            <span className="text-gray-500 text-xs md:text-sm">
+              Unavailable
+            </span>
           )}
         </div>
       ))}

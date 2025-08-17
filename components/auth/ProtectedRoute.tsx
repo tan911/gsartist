@@ -2,6 +2,8 @@ import React, { ReactNode, useEffect } from "react";
 import { useAuth } from "@/lib/context/AuthContext";
 import { LoadingSpinner } from "@/components/ui/data-loading";
 import { useRouter } from "next/navigation";
+import { Heading2 } from "../typography/Heading2";
+import { cn } from "@/lib/utils";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -56,9 +58,9 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900">
+          <Heading2 className={cn("text-left text-gray-900")}>
             Authentication Required
-          </h2>
+          </Heading2>
           <p className="mt-2 text-sm text-gray-600">
             Please log in to access this page.
           </p>
@@ -75,7 +77,9 @@ export const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900">Access Denied</h2>
+          <Heading2 className={cn("text-left text-gray-900")}>
+            Access Denied
+          </Heading2>
           <p className="mt-2 text-sm text-gray-600">
             This page is only available for artists.
           </p>
