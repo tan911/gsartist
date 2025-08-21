@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { MenuItem } from "@/types";
 import UnreadBadge from "@/app/dashboard/messages/_components/UnreadBadge";
 import { useRouter, usePathname } from "next/navigation";
+import { X } from "lucide-react";
 
 interface SidebarProps {
   menuItems: MenuItem[];
@@ -78,7 +79,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   // Sidebar content
   const sidebarContent = (
-    <nav className="p-4 space-y-2">
+    <nav className="p-4 space-y-0">
       {menuItems.map((item) => {
         const Icon = item.icon;
         let unreadCount = 0;
@@ -104,10 +105,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             key={item.id}
             onClick={() => handleNavigation(item.id)}
-            className={`w-full flex justify-center md:justify-between items-center px-4 py-3 text-left rounded-lg transition-colors ${
+            className={`w-full flex justify-center md:justify-between items-center px-4 py-3 text-left rounded-lg transition-colors touch-manipulation ${
               isActive
                 ? "bg-purple-50 text-purple-700 font-medium"
-                : "text-gray-700 hover:bg-gray-100"
+                : "text-gray-700 hover:bg-gray-100 active:bg-gray-200"
             }`}>
             <span className="flex items-center">
               <Icon className="h-5 w-5 md:mr-3" />
@@ -131,18 +132,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
         aria-hidden={!mobileOpen}>
         {/* Backdrop */}
         <div
-          className={`absolute inset-0 transition-opacity duration-300 ${
+          className={`absolute inset-0 transition-opacity duration-300 inset-0 bg-gradient-to-br from-purple-400/30 to-pink-400/30 backdrop-blur-md  ${
             mobileOpen ? "opacity-100" : "opacity-0"
           }`}
           onClick={onCloseMobile}
         />
         {/* Drawer */}
         <aside
-          className={`absolute left-0 top-18 h-full w-16 bg-white shadow-lg border-r border-gray-200 transform transition-transform duration-300 ${
+          className={`absolute left-0 top-14 h-full w-14 bg-white shadow-lg border-r border-gray-200 transform transition-transform duration-300 ${
             mobileOpen ? "translate-x-0" : "-translate-x-full"
-          } flex flex-col items-center pt-4`}>
+          } flex flex-col items-center pt-2`}>
           {/* Only render icons for mobile drawer */}
-          <nav className="space-y-2">
+          <nav className="space-y-0">
             {menuItems.map((item) => {
               const Icon = item.icon;
               let unreadCount = 0;
@@ -157,12 +158,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => handleNavigation(item.id)}
-                  className={`relative flex flex-col items-center justify-center w-12 h-12 rounded-lg transition-colors text-xl ${
+                  className={`relative flex flex-col items-center justify-center w-12 h-10 rounded-lg transition-colors text-xl touch-manipulation ${
                     isActive
                       ? "bg-purple-50 text-purple-700 font-medium"
-                      : "text-gray-700 hover:bg-gray-100"
+                      : "text-gray-700 hover:bg-gray-100 active:bg-gray-200"
                   }`}>
-                  <Icon className="h-6 w-6" />
+                  <Icon className="h-4 w-4" />
                   {item.id === "messages" && (
                     <UnreadBadge
                       count={unreadCount}

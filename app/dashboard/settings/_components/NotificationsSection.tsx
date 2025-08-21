@@ -20,14 +20,14 @@ const NotificationsSection: React.FC<NotificationsSectionProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 md:space-y-4">
       <SectionHeader
         title="Notification Preferences"
         description="Choose how you want to be notified about important updates"
         icon={Bell}
       />
 
-      <div className="space-y-6">
+      <div className="space-y-2 md:space-y-4">
         <div className="bg-gray-50 p-4 rounded-lg space-y-4">
           <h4 className="font-medium text-gray-900">Booking Notifications</h4>
           <div className="space-y-4">

@@ -106,7 +106,7 @@ const LocationTab: React.FC<LocationTabProps> = ({ className = "" }) => {
   }, [startEditing]);
 
   return (
-    <div className={`space-y-6 ${className}`}>
+    <div className={`space-y-2 md:space-y-4 ${className}`}>
       <LocationHeader
         isEditing={isEditing}
         isSaving={isSaving}

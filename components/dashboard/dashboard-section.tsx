@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/buttonnew";
 import { cn } from "@/lib/utils";
+import { Heading3 } from "../typography/Heading3";
 
 interface DashboardSectionProps {
   title: string;
@@ -22,7 +23,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
   return (
     <div
       className={cn(
-        "bg-white rounded-lg shadow-sm border border-gray-200 p-6",
+        "bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-8 mb-4",
         className
       )}>
       <div
@@ -30,7 +31,10 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
           "flex items-center justify-between mb-4",
           headerClassName
         )}>
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+        {" "}
+        <Heading3 className={cn("mb-1 md:mb-2 text-left text-gray-900")}>
+          {title}
+        </Heading3>
         {onViewAll && (
           <Button
             variant="ghost"

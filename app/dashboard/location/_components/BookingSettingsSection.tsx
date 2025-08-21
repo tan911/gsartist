@@ -14,7 +14,7 @@ const BookingSettingsSection: React.FC<BookingSettingsSectionProps> = ({
   onToggleManualAcceptance,
   travelRadius,
 }) => (
-  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-8">
     <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
       <Settings className="h-5 w-5 text-purple-600 mr-2" />
       Booking Settings
@@ -34,7 +34,9 @@ const BookingSettingsSection: React.FC<BookingSettingsSectionProps> = ({
         <button
           onClick={() => isEditing && onToggleManualAcceptance()}
           disabled={!isEditing}
-          className={`flex items-center ${isEditing ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}
+          className={`flex items-center ${
+            isEditing ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+          }`}
           aria-label={
             manualAcceptanceOutsideRadius
               ? "Disable manual acceptance"

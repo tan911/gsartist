@@ -27,12 +27,12 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 md:space-y-4">
       <SectionHeader
         title="Profile Information"
         description="Update your personal information and professional details"
       />
-      <form onSubmit={onSubmit} className="space-y-6">
+      <form onSubmit={onSubmit} className="space-y-2 md:space-y-4">
         <ProfileNameFields
           firstName={profileData.firstName}
           lastName={profileData.lastName}

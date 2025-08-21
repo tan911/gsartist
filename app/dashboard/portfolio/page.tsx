@@ -1,112 +1,40 @@
 "use client";
-import React, { useState } from "react";
-import { Plus } from "lucide-react";
+import React from "react";
 import { PortfolioStats } from "@/app/dashboard/portfolio/_components/PortfolioStats";
 import { PortfolioFilterTabs } from "@/app/dashboard/portfolio/_components/PortfolioFilterTabs";
 import { PortfolioGrid } from "@/app/dashboard/portfolio/_components/PortfolioGrid";
 import { PortfolioUploadModal } from "@/app/dashboard/portfolio/_components/PortfolioUploadModal";
-import {
-  portfolioItems as portfolioItemsMock,
-  mockUser,
-} from "@/lib/data/mock-data";
-import { Modal } from "@/components/ui/modal";
-
-const categories = ["All", "Hair", "Makeup", "Combo"];
+import { PortfolioImageModal } from "@/app/dashboard/portfolio/_components/PortfolioImageModal";
+import { PortfolioHeader } from "@/app/dashboard/portfolio/_components/PortfolioHeader";
+import { mockUser, portfolioCategories } from "@/lib/data/mock-data";
+import { usePortfolio } from "@/lib/hooks/usePortfolio";
 
 export default function PortfolioPage() {
-  const [portfolioItems, setPortfolioItems] = useState(portfolioItemsMock);
-  const [portfolioFilter, setPortfolioFilter] = useState("All");
-  const [showUploadModal, setShowUploadModal] = useState(false);
-  const [showImageModal, setShowImageModal] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<any>(null);
-  const [editingItem, setEditingItem] = useState<any>(null);
-
-  const filteredPortfolio =
-    portfolioFilter === "All"
-      ? portfolioItems
-      : portfolioItems.filter((item) => item.category === portfolioFilter);
-
-  const handleAddPortfolioItem = (item: any) => {
-    // Support multiple images per card
-    let images: string[] = [];
-    if (item.images && Array.isArray(item.images)) {
-      images = item.images;
-    } else if (item.url) {
-      images = [item.url];
-    } else if (item.imageMeta && item.imageMeta.image_url) {
-      images = [item.imageMeta.image_url];
-    }
-    setPortfolioItems((prev) => [...prev, { ...item, images, id: Date.now() }]);
-    setShowUploadModal(false);
-  };
-
-  const handleDeletePortfolioItem = (id: number) => {
-    setPortfolioItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  // TODO: Implement edit functionality
-  const handleEditPortfolioItem = (id: number) => {
-    const item = portfolioItems.find((i) => i.id === id);
-    if (item) {
-      setEditingItem(item);
-      setShowUploadModal(true);
-    }
-  };
-
-  const handleUploadModalClose = () => {
-    setShowUploadModal(false);
-    setEditingItem(null);
-  };
-
-  const handleAddOrEditPortfolioItem = (item: any) => {
-    let images: string[] = [];
-    if (item.images && Array.isArray(item.images)) {
-      images = item.images;
-    } else if (item.url) {
-      images = [item.url];
-    } else if (item.imageMeta && item.imageMeta.image_url) {
-      images = [item.imageMeta.image_url];
-    }
-    if (editingItem) {
-      // Edit existing item
-      setPortfolioItems((prev) =>
-        prev.map((i) =>
-          i.id === editingItem.id ? { ...i, ...item, images } : i
-        )
-      );
-    } else {
-      // Add new item
-      setPortfolioItems((prev) => [
-        ...prev,
-        { ...item, images, id: Date.now() },
-      ]);
-    }
-    setShowUploadModal(false);
-    setEditingItem(null);
-  };
-
-  const handleImageClick = (item: any) => {
-    setSelectedImage(item);
-    setShowImageModal(true);
-  };
+  const {
+    portfolioItems,
+    filteredPortfolio,
+    portfolioFilter,
+    setPortfolioFilter,
+    showUploadModal,
+    setShowUploadModal,
+    showImageModal,
+    selectedImage,
+    editingItem,
+    handleAddPortfolioItem,
+    handleDeletePortfolioItem,
+    handleEditPortfolioItem,
+    handleUploadModalClose,
+    handleImageClick,
+    handleImageModalClose,
+  } = usePortfolio();
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">
-          Portfolio Management
-        </h2>
-        <button
-          onClick={() => setShowUploadModal(true)}
-          className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 flex items-center">
-          <Plus className="h-4 w-4 mr-2" />
-          Add Media
-        </button>
-      </div>
+    <div className="space-y-2 md:space-y-4">
+      <PortfolioHeader onAddClick={() => setShowUploadModal(true)} />
 
       <PortfolioStats portfolioItems={portfolioItems} />
       <PortfolioFilterTabs
-        categories={categories}
+        categories={portfolioCategories}
         activeCategory={portfolioFilter}
         onCategoryChange={setPortfolioFilter}
       />
@@ -119,31 +47,16 @@ export default function PortfolioPage() {
       <PortfolioUploadModal
         open={showUploadModal}
         onClose={handleUploadModalClose}
-        onUpload={handleAddOrEditPortfolioItem}
+        onUpload={handleAddPortfolioItem}
         initialValues={editingItem}
         artistName={mockUser.name}
         artistId={mockUser.id}
       />
-      {showImageModal && selectedImage && (
-        <Modal
-          isOpen={showImageModal}
-          onClose={() => setShowImageModal(false)}
-          title={selectedImage.title || "Image Preview"}
-          maxWidth="max-w-3xl">
-          <div className="flex flex-col gap-4 max-h-[70vh] overflow-y-auto p-2 sm:p-4">
-            {selectedImage.images &&
-              selectedImage.images.map((img: string, idx: number) => (
-                <div key={idx} className="flex flex-col items-center">
-                  <img
-                    src={img}
-                    alt={selectedImage.title}
-                    className="w-full h-auto object-contain rounded border border-gray-200 bg-gray-50"
-                  />
-                </div>
-              ))}
-          </div>
-        </Modal>
-      )}
+      <PortfolioImageModal
+        isOpen={showImageModal}
+        onClose={handleImageModalClose}
+        selectedItem={selectedImage}
+      />
     </div>
   );
 }

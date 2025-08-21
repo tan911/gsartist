@@ -53,6 +53,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           markNotificationAsRead={markNotificationAsRead}
           user={displayUser}
           onOpenSidebar={() => setMobileSidebarOpen(true)}
+          onCloseSidebar={() => setMobileSidebarOpen(false)}
+          mobileSidebarOpen={mobileSidebarOpen}
         />
         <div className="flex">
           <Sidebar
@@ -63,7 +65,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             mobileOpen={mobileSidebarOpen}
             onCloseMobile={() => setMobileSidebarOpen(false)}
           />
-          <main className="flex-1 p-2 sm:p-4 lg:p-6">{children}</main>
+          <main className="flex-1 p-2 sm:p-4">{children}</main>
         </div>
       </div>
     </UserDataProvider>

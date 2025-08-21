@@ -5,6 +5,7 @@ import { Service } from "@/types";
 import { ServiceHeader } from "@/app/dashboard/services/_components/ServiceHeader";
 import { ServiceModals } from "@/app/dashboard/services/_components/ServiceModals";
 import { ServiceMain } from "@/app/dashboard/services/_components/ServiceMain";
+import { useServiceFilter } from "@/lib/hooks/useServiceFilter";
 
 export default function ServicesPage() {
   const categories = ["All", "Hair", "Makeup", "Combo"];
@@ -20,6 +21,9 @@ export default function ServicesPage() {
   const [serviceToDelete, setServiceToDelete] = React.useState<Service | null>(
     null
   );
+
+  // Use custom hook for filtering services
+  const filteredServices = useServiceFilter(services, activeCategory);
 
   const handleEditService = (service: Service) => {
     setEditingService(service);
@@ -50,13 +54,8 @@ export default function ServicesPage() {
     setActiveCategory(category);
   };
 
-  const filteredServices =
-    activeCategory === "All"
-      ? services
-      : services.filter((service) => service.category === activeCategory);
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 md:space-y-4">
       <ServiceHeader
         onAdd={() => {
           setEditingService(null);

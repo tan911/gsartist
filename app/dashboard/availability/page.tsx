@@ -18,6 +18,8 @@ import type {
 import { WorkingHoursSection } from "./_components/WorkingHoursSection";
 import { BookingSettingsSection } from "./_components/BookingSettingsSection";
 import { BlackoutDatesSection } from "./_components/BlackoutDatesSection";
+import { cn } from "@/lib/utils";
+import { Heading2 } from "@/components/typography/Heading2";
 
 const days: DayOfWeek[] = [
   "monday",
@@ -105,11 +107,11 @@ export default function AvailabilityPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 md:space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">
+        <Heading2 className={cn("text-left text-gray-900")}>
           Availability Settings
-        </h2>
+        </Heading2>
         <Button onClick={handleButtonClick} disabled={isSaving}>
           {isSaving ? (
             <>

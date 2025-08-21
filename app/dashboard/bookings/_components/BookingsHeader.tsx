@@ -1,6 +1,9 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import { ChevronDown } from "lucide-react";
 import type { BookingsHeaderProps } from "@/types";
+import { Heading2 } from "@/components/typography/Heading2";
+import { cn } from "@/lib/utils";
+import { useDropdown } from "@/lib/hooks/useDropdown";
 
 const dateRangeOptions = [
   { value: "all", label: "All Time" },
@@ -14,49 +17,35 @@ const BookingsHeader: React.FC<BookingsHeaderProps> = ({
   dateRange,
   setDateRange,
 }) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setDropdownOpen(false);
-      }
-    }
-    if (dropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownOpen]);
+  const { dropdownOpen, setDropdownOpen, dropdownRef } = useDropdown();
 
   return (
     <div className="flex items-start justify-between">
-      <h2 className="text-2xl font-bold text-gray-900">Bookings Management</h2>
+      <Heading2 className={cn("text-left text-gray-900")}>
+        Bookings Management
+      </Heading2>
       <div className="relative" ref={dropdownRef}>
         <button
-          className="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+          className="flex items-center p-1 md:p-2 bg-white border border-gray-300 rounded-sm shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 transition text-xs md:text-sm"
           onClick={() => setDropdownOpen((open) => !open)}
           type="button"
           aria-haspopup="listbox"
           aria-expanded={dropdownOpen}>
           {dateRangeOptions.find((opt) => opt.value === dateRange)?.label}
-          <ChevronDown className="ml-2 w-4 h-4 text-gray-500" />
+          <ChevronDown className="ml-1 w-4 h-4 text-gray-500" />
         </button>
         {dropdownOpen && (
           <ul
-            className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-10 py-1"
+            className="absolute right-0 mt-1 w-32 bg-white border border-gray-200 rounded-sm shadow-lg z-10"
             role="listbox">
             {dateRangeOptions.map((option) => (
               <li
                 key={option.value}
-                className={`px-4 py-2 cursor-pointer hover:bg-purple-50 text-gray-700 ${dateRange === option.value ? "bg-purple-100 font-semibold text-purple-700" : ""}`}
+                className={`px-4 py-2 cursor-pointer hover:bg-purple-50 text-gray-700 ${
+                  dateRange === option.value
+                    ? "bg-purple-100 font-semibold text-purple-700"
+                    : ""
+                }`}
                 onClick={() => {
                   setDateRange(option.value);
                   setDropdownOpen(false);

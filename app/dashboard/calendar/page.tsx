@@ -15,6 +15,7 @@ import {
   getBlockedInfoForDate,
 } from "@/lib/utils/calendar-utils";
 import type { CalendarFilters } from "@/types";
+import { useCalendarFilters } from "@/lib/hooks/useCalendarFilters";
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -26,28 +27,13 @@ export default function CalendarPage() {
     timeRange: "all",
   });
 
-  const filteredBookings = useMemo(() => {
-    return allBookings.filter((booking) => {
-      if (
-        selectedFilters.status !== "all" &&
-        booking.status !== selectedFilters.status
-      )
-        return false;
-      if (
-        selectedFilters.service !== "all" &&
-        !booking.service.name
-          .toLowerCase()
-          .includes(selectedFilters.service.toLowerCase())
-      )
-        return false;
-      return true;
-    });
-  }, [selectedFilters]);
+  // Use custom hook for filtering bookings
+  const filteredBookings = useCalendarFilters(allBookings, selectedFilters);
 
   const days = getDaysInMonth(currentDate);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 md:space-y-4">
       <CalendarHeader
         currentDate={currentDate}
         onPrevMonth={() =>
@@ -74,7 +60,7 @@ export default function CalendarPage() {
           onChange={setSelectedFilters}
         />
       )}
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="space-y-2 md:space-y-4">
         {/* Calendar */}
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -92,17 +78,19 @@ export default function CalendarPage() {
           </div>
         </div>
         {/* Sidebar */}
-        <CalendarSidebar
-          selectedDate={selectedDate}
-          getBookingsForDate={(date) =>
-            getBookingsForDate(date, filteredBookings)
-          }
-          getBlockedInfoForDate={(date) =>
-            getBlockedInfoForDate(date, calendarBlockedDates)
-          }
-          bookings={filteredBookings}
-          currentDate={currentDate}
-        />
+        <div className="lg:col-span-1">
+          <CalendarSidebar
+            selectedDate={selectedDate}
+            getBookingsForDate={(date) =>
+              getBookingsForDate(date, filteredBookings)
+            }
+            getBlockedInfoForDate={(date) =>
+              getBlockedInfoForDate(date, calendarBlockedDates)
+            }
+            bookings={filteredBookings}
+            currentDate={currentDate}
+          />
+        </div>
       </div>
     </div>
   );

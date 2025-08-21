@@ -2,6 +2,8 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/inputLabel";
 import { AvailabilitySettings } from "@/types";
+import { Heading3 } from "@/components/typography/Heading3";
+import { cn } from "@/lib/utils";
 
 interface BookingSettingsSectionProps {
   settings: AvailabilitySettings;
@@ -14,11 +16,12 @@ export const BookingSettingsSection: React.FC<BookingSettingsSectionProps> = ({
   onChange,
   disabled = false,
 }) => (
-  <Card className="p-6">
-    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+  <Card className="p-4 md:p-8">
+    <Heading3 className={cn("text-left text-gray-900")}>
       Booking Settings
-    </h3>
-    <div className="grid md:grid-cols-3 gap-6">
+    </Heading3>
+
+    <div className="grid md:grid-cols-2 gap-2 md:gap-4">
       <Input
         type="number"
         label="Minimum Lead Time (hours)"
@@ -41,7 +44,7 @@ export const BookingSettingsSection: React.FC<BookingSettingsSectionProps> = ({
         min="1"
         disabled={disabled}
       />
-      <Input
+      {/* <Input
         type="number"
         label="Buffer Time (minutes)"
         value={settings.bufferTime}
@@ -52,7 +55,7 @@ export const BookingSettingsSection: React.FC<BookingSettingsSectionProps> = ({
         min="0"
         step="15"
         disabled={disabled}
-      />
+      /> */}
     </div>
   </Card>
 );

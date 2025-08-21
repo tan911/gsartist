@@ -6,6 +6,8 @@ import { ReviewsStats } from "@/app/dashboard/reviews/_components/ReviewsStats";
 import { ReviewsFilter } from "@/app/dashboard/reviews/_components/ReviewsFilter";
 import { ReviewsList } from "@/app/dashboard/reviews/_components/ReviewsList";
 import { reviews as reviewsMock } from "@/lib/data/mock-data";
+import { Heading2 } from "@/components/typography/Heading2";
+import { cn } from "@/lib/utils";
 
 const filterOptions = ["All", "Replied", "Pending"];
 
@@ -38,9 +40,11 @@ export default function ReviewsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 md:space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Reviews Management</h2>
+        <Heading2 className={cn("text-left text-gray-900")}>
+          Reviews Management
+        </Heading2>
         <div className="flex items-center space-x-4">
           <ReviewsFilter value={reviewsFilter} onChange={setReviewsFilter} />
         </div>

@@ -15,14 +15,22 @@ const BookingsActions: React.FC<BookingsActionsProps> = ({
   showCancel = true,
 }) => {
   return (
-    <div style={{ display: "flex", gap: "0.5rem" }}>
+    <div className="flex space-x-3">
       {showAccept && (
-        <Button variant="primary" size="sm" onClick={onAccept}>
+        <Button
+          variant="default"
+          size="sm"
+          onClick={onAccept}
+          className="bg-green-600 hover:bg-green-700 text-white">
           Accept
         </Button>
       )}
       {showCancel && (
-        <Button variant="ghost" size="sm" onClick={onCancel}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onCancel}
+          className="border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400">
           Cancel
         </Button>
       )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { Button } from "../ui/button-old";
@@ -14,19 +14,31 @@ import {
 import { Input } from "../ui/inputLabel";
 import { Label } from "../ui/label";
 import Link from "next/link";
-import { login } from "@/lib/action";
 import { LoadingSpinner } from "../ui/data-loading";
+import { useAuthStore } from "@/stores/auth-store";
 
 export function LogInForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [state, formAction, isPending] = useActionState(login, undefined);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
+  const { signin, isLoading } = useAuthStore();
 
-  useEffect(() => {
-    if (state === "Successful!") {
-      router.push("/dashboard");
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const result = await signin(email, password);
+      if (result.success) {
+        router.push("/dashboard");
+      } else {
+        console.error("Login failed:", result.error);
+        // You can add error handling here (toast notification, etc.)
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      // You can add error handling here (toast notification, etc.)
     }
-  }, [state, router]);
+  };
 
   return (
     <Card className="max-w-lg mx-auto w-full">
@@ -35,7 +47,7 @@ export function LogInForm() {
         <CardDescription>Login with your Google account</CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={formAction}>
+        <form onSubmit={handleLogin}>
           <div className="grid gap-6 lg:mb-10">
             <Button variant="outline" className="w-full">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -63,6 +75,8 @@ export function LogInForm() {
                   type="email"
                   placeholder="Your@email.com"
                   className="pl-8"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
@@ -84,6 +98,8 @@ export function LogInForm() {
                   type={showPassword ? "text" : "password"}
                   className="pl-8 pr-8"
                   placeholder="Create password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
                 <Button
@@ -101,8 +117,8 @@ export function LogInForm() {
             <Button
               type="submit"
               className="w-full cursor-pointer"
-              disabled={isPending}>
-              {isPending ? <LoadingSpinner /> : "Continue"}
+              disabled={isLoading}>
+              {isLoading ? <LoadingSpinner /> : "Continue"}
             </Button>
           </div>
         </form>

@@ -12,15 +12,20 @@ export const ServiceCategories: React.FC<ServiceCategoriesProps> = ({
   activeCategory,
   onCategoryChange,
 }) => (
-  <div className="flex space-x-4">
-    {categories.map((category) => (
-      <Button
-        key={category}
-        variant={category === activeCategory ? "primary" : "secondary"}
-        size="sm"
-        onClick={() => onCategoryChange(category)}>
-        {category}
-      </Button>
-    ))}
+  <div className="border-b border-gray-200 bg-white rounded-lg">
+    <nav className="flex p-1">
+      {categories.map((category) => (
+        <button
+          key={category}
+          className={`px-2 py-1.5 md:px-4 md:py-2.5 rounded-md font-medium text-sm transition-all duration-200 ${
+            category === activeCategory
+              ? "bg-purple-100 text-purple-700 border border-purple-200 shadow-sm"
+              : "text-gray-600 hover:text-gray-800 hover:bg-gray-50 border border-transparent"
+          }`}
+          onClick={() => onCategoryChange(category)}>
+          {category}
+        </button>
+      ))}
+    </nav>
   </div>
 );

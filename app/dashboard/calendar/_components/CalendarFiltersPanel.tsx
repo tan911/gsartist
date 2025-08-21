@@ -1,6 +1,9 @@
 import React, { useState, useRef } from "react";
 import type { CalendarFiltersPanelProps } from "@/types";
 import { statusOptions, serviceOptions } from "@/lib/data/mock-data";
+import { Button } from "@/components/ui/buttonnew";
+import { Paragraph } from "@/components/typography/Paragraph";
+import { cn } from "@/lib/utils";
 
 function useDropdown(initial = false) {
   const [open, setOpen] = useState(initial);
@@ -31,21 +34,20 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
   const serviceDropdown = useDropdown();
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
+    <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Status Filter */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Status
-          </label>
+          <Paragraph className={cn("mb-2 text-left")}>Status</Paragraph>
           <div className="relative" ref={statusDropdown.ref}>
-            <button
-              className="flex items-center justify-between w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+            <Button
+              variant="outline"
+              className="flex items-center justify-between w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors"
               onClick={() => statusDropdown.setOpen((open) => !open)}
               type="button"
               aria-haspopup="listbox"
               aria-expanded={statusDropdown.open}>
-              <span>
+              <span className="text-gray-900">
                 {
                   statusOptions.find(
                     (opt) => opt.value === selectedFilters.status
@@ -53,7 +55,7 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
                 }
               </span>
               <svg
-                className="w-4 h-4 text-gray-500"
+                className="w-4 h-4 text-gray-500 ml-2"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
@@ -64,15 +66,19 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
                   d="M19 9l-7 7-7-7"
                 />
               </svg>
-            </button>
+            </Button>
             {statusDropdown.open && (
               <ul
-                className="absolute left-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-10 py-1"
+                className="absolute left-0 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-10"
                 role="listbox">
                 {statusOptions.map((option) => (
                   <li
                     key={option.value}
-                    className={`px-4 py-2 cursor-pointer hover:bg-purple-50 text-gray-700 ${selectedFilters.status === option.value ? "bg-purple-100 font-semibold text-purple-700" : ""}`}
+                    className={`px-4 py-2 cursor-pointer hover:bg-purple-50 text-gray-700 transition-colors ${
+                      selectedFilters.status === option.value
+                        ? "bg-purple-100 font-semibold text-purple-700"
+                        : ""
+                    }`}
                     onClick={() => {
                       onChange({ ...selectedFilters, status: option.value });
                       statusDropdown.setOpen(false);
@@ -88,17 +94,17 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
         </div>
         {/* Service Filter */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Service
-          </label>
+          <Paragraph className={cn("mb-2 text-left")}>Service</Paragraph>
+
           <div className="relative" ref={serviceDropdown.ref}>
-            <button
-              className="flex items-center justify-between w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+            <Button
+              variant="outline"
+              className="flex items-center justify-between w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors"
               onClick={() => serviceDropdown.setOpen((open) => !open)}
               type="button"
               aria-haspopup="listbox"
               aria-expanded={serviceDropdown.open}>
-              <span>
+              <span className="text-gray-900">
                 {
                   serviceOptions.find(
                     (opt) => opt.value === selectedFilters.service
@@ -106,7 +112,7 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
                 }
               </span>
               <svg
-                className="w-4 h-4 text-gray-500"
+                className="w-4 h-4 text-gray-500 ml-2"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
@@ -117,15 +123,19 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
                   d="M19 9l-7 7-7-7"
                 />
               </svg>
-            </button>
+            </Button>
             {serviceDropdown.open && (
               <ul
-                className="absolute left-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-10 py-1"
+                className="absolute left-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-10"
                 role="listbox">
                 {serviceOptions.map((option) => (
                   <li
                     key={option.value}
-                    className={`px-4 py-2 cursor-pointer hover:bg-purple-50 text-gray-700 ${selectedFilters.service === option.value ? "bg-purple-100 font-semibold text-purple-700" : ""}`}
+                    className={`px-4 py-2 cursor-pointer hover:bg-purple-50 text-gray-700 transition-colors ${
+                      selectedFilters.service === option.value
+                        ? "bg-purple-100 font-semibold text-purple-700"
+                        : ""
+                    }`}
                     onClick={() => {
                       onChange({ ...selectedFilters, service: option.value });
                       serviceDropdown.setOpen(false);

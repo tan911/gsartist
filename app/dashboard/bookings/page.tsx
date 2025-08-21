@@ -15,24 +15,10 @@ import { useState, useRef } from "react";
 import BookingsHeader from "@/app/dashboard/bookings/_components/BookingsHeader";
 import BookingsTabSection from "@/app/dashboard/bookings/_components/BookingsTabSection";
 import BookingsContent from "@/app/dashboard/bookings/_components/BookingsContent";
+import { useBookingsFilter } from "@/lib/hooks/useBookingsFilter";
+import { useDropdown } from "@/lib/hooks/useDropdown";
 
 const bookingTabs = ["All", "Upcoming", "Pending", "Completed", "Cancelled"];
-
-function filterBookingsByTab(tab: string, bookings: typeof allBookings) {
-  switch (tab) {
-    case "Upcoming":
-      return bookings.filter((b) => b.status === "confirmed");
-    case "Pending":
-      return bookings.filter((b) => b.status === "pending");
-    case "Completed":
-      return bookings.filter((b) => b.status === "completed");
-    case "Cancelled":
-      return bookings.filter((b) => b.status === "cancelled");
-    case "All":
-    default:
-      return bookings;
-  }
-}
 
 export default function BookingsPage() {
   const [activeTab, setActiveTab] = React.useState<string>(
@@ -40,36 +26,10 @@ export default function BookingsPage() {
   );
   const [bookings, setBookings] = React.useState(allBookings);
   const [dateRange, setDateRange] = React.useState("all");
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on outside click
-  React.useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setDropdownOpen(false);
-      }
-    }
-    if (dropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownOpen]);
-
-  const dateRangeOptions = [
-    { value: "all", label: "All Time" },
-    { value: "today", label: "Today" },
-    { value: "yesterday", label: "Yesterday" },
-    { value: "week", label: "Past Week" },
-    { value: "month", label: "Past Month" },
-  ];
+  // Use custom hooks for dropdown and filtering
+  const { dropdownOpen, dropdownRef, setDropdownOpen } = useDropdown();
+  const filteredBookings = useBookingsFilter(bookings, activeTab, dateRange);
 
   const handleAccept = (id: string) => {
     setBookings((prev) =>
@@ -89,49 +49,19 @@ export default function BookingsPage() {
     );
   };
 
-  // Date range filter logic
-  const filterByDateRange = (bookings: typeof allBookings, range: string) => {
-    const now = new Date();
-    return bookings.filter((booking) => {
-      const bookingDate = new Date(booking.date);
-      switch (range) {
-        case "today":
-          return bookingDate.toDateString() === now.toDateString();
-        case "yesterday": {
-          const yesterday = new Date(now);
-          yesterday.setDate(now.getDate() - 1);
-          return bookingDate.toDateString() === yesterday.toDateString();
-        }
-        case "week": {
-          const weekAgo = new Date(now);
-          weekAgo.setDate(now.getDate() - 7);
-          return bookingDate >= weekAgo && bookingDate <= now;
-        }
-        case "month": {
-          const monthAgo = new Date(now);
-          monthAgo.setMonth(now.getMonth() - 1);
-          return bookingDate >= monthAgo && bookingDate <= now;
-        }
-        case "all":
-        default:
-          return true;
-      }
-    });
-  };
-
-  const filteredBookings = filterByDateRange(bookings, dateRange);
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 md:space-y-4">
       <BookingsHeader dateRange={dateRange} setDateRange={setDateRange} />
       <BookingsTabSection activeTab={activeTab} onTabChange={setActiveTab} />
-      <BookingsContent
-        activeTab={activeTab}
-        bookings={filteredBookings}
-        onAccept={handleAccept}
-        onCancel={handleCancel}
-        onComplete={handleComplete}
-      />
+      <div className="bg-gray-50 rounded-xl ">
+        <BookingsContent
+          activeTab={activeTab}
+          bookings={filteredBookings}
+          onAccept={handleAccept}
+          onCancel={handleCancel}
+          onComplete={handleComplete}
+        />
+      </div>
     </div>
   );
 }
