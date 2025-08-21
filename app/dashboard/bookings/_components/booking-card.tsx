@@ -9,29 +9,8 @@ import { Heading4 } from "@/components/typography/Heading4";
 import { cn } from "@/lib/utils";
 import { Meta } from "@/components/typography/Meta";
 
-export const BookingCard: React.FC<BookingCardProps> = ({
-  booking,
-  onAccept,
-  onCancel,
-  onComplete,
-}) => {
-  const [showCancelModal, setShowCancelModal] = useState(false);
-
-  const getStatusVariant = (status: string) => {
-    switch (status) {
-      case "confirmed":
-        return "success";
-      case "pending":
-        return "warning";
-      case "cancelled":
-        return "danger";
-      case "completed":
-        return "info";
-      default:
-        return "info";
-    }
-  };
-
+// Extract status badge to its own component
+const StatusBadge = ({ status }: { status: string }) => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "confirmed":
@@ -46,6 +25,23 @@ export const BookingCard: React.FC<BookingCardProps> = ({
         return "bg-gray-100 text-gray-700 border-gray-200";
     }
   };
+  return (
+    <Badge
+      className={`px-3 py-1 text-xs font-medium rounded-full border ${getStatusColor(
+        status
+      )}`}>
+      {status}
+    </Badge>
+  );
+};
+
+export const BookingCard: React.FC<BookingCardProps> = ({
+  booking,
+  onAccept,
+  onCancel,
+  onComplete,
+}) => {
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
   const handleCancelClick = () => setShowCancelModal(true);
   const handleCancelConfirm = () => {
@@ -77,21 +73,14 @@ export const BookingCard: React.FC<BookingCardProps> = ({
             </Meta>
           </div>
         </div>
-
         {/* Price and Status */}
         <div className="text-right">
           <p className="font-bold text-gray-900 text-lg md:text-2xl mb-1">
             ${booking.totalAmount}
           </p>
-          <Badge
-            className={`px-3 py-1 text-xs font-medium rounded-full border ${getStatusColor(
-              booking.status
-            )}`}>
-            {booking.status}
-          </Badge>
+          <StatusBadge status={booking.status} />
         </div>
       </div>
-
       {/* Date and Time Section */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-6">
@@ -112,7 +101,6 @@ export const BookingCard: React.FC<BookingCardProps> = ({
           {booking.duration}
         </Meta>
       </div>
-
       {/* Actions Section */}
       {booking.status === "pending" && (
         <div className="flex justify-end space-x-2 pt-2 border-t border-gray-100">
@@ -124,7 +112,6 @@ export const BookingCard: React.FC<BookingCardProps> = ({
           />
         </div>
       )}
-
       {booking.status === "confirmed" && (
         <div className="flex justify-end space-x-2 pt-2 md:pt-4 border-t border-gray-100">
           <Button
@@ -143,7 +130,6 @@ export const BookingCard: React.FC<BookingCardProps> = ({
           </Button>
         </div>
       )}
-
       <CancelBookingModal
         isOpen={showCancelModal}
         onClose={handleCancelClose}

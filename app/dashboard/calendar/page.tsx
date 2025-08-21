@@ -15,6 +15,7 @@ import {
   getBlockedInfoForDate,
 } from "@/lib/utils/calendar-utils";
 import type { CalendarFilters } from "@/types";
+import { useCalendarFilters } from "@/lib/hooks/useCalendarFilters";
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -26,23 +27,8 @@ export default function CalendarPage() {
     timeRange: "all",
   });
 
-  const filteredBookings = useMemo(() => {
-    return allBookings.filter((booking) => {
-      if (
-        selectedFilters.status !== "all" &&
-        booking.status !== selectedFilters.status
-      )
-        return false;
-      if (
-        selectedFilters.service !== "all" &&
-        !booking.service.name
-          .toLowerCase()
-          .includes(selectedFilters.service.toLowerCase())
-      )
-        return false;
-      return true;
-    });
-  }, [selectedFilters]);
+  // Use custom hook for filtering bookings
+  const filteredBookings = useCalendarFilters(allBookings, selectedFilters);
 
   const days = getDaysInMonth(currentDate);
 

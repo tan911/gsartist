@@ -197,6 +197,8 @@ export const reviewsLinked = [
   },
 ];
 
+export const portfolioCategories = ["All", "Hair", "Makeup", "Combo"];
+
 export const portfolioItems = [
   {
     id: 1,

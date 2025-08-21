@@ -1,8 +1,9 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import { ChevronDown } from "lucide-react";
 import type { BookingsHeaderProps } from "@/types";
 import { Heading2 } from "@/components/typography/Heading2";
 import { cn } from "@/lib/utils";
+import { useDropdown } from "@/lib/hooks/useDropdown";
 
 const dateRangeOptions = [
   { value: "all", label: "All Time" },
@@ -16,27 +17,7 @@ const BookingsHeader: React.FC<BookingsHeaderProps> = ({
   dateRange,
   setDateRange,
 }) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setDropdownOpen(false);
-      }
-    }
-    if (dropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownOpen]);
+  const { dropdownOpen, setDropdownOpen, dropdownRef } = useDropdown();
 
   return (
     <div className="flex items-start justify-between">

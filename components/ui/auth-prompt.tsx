@@ -46,7 +46,7 @@ export const AuthPrompt: React.FC<AuthPromptProps> = ({
           </Button>
           {showSignup && (
             <Button
-              onClick={() => router.push("/auth/reviews")}
+              onClick={() => router.push("/dashboard/reviews")}
               variant="outline"
               size="sm"
               className="w-[80px] sm:w-[100px]">

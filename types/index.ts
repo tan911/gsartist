@@ -118,7 +118,6 @@ export type TabType =
   | "location"
   | "settings";
 
-export type PortfolioFilter = "All" | "Hair" | "Makeup" | "Combo";
 export type ReviewsFilter = "All" | "Replied" | "Pending";
 
 export type DayOfWeek =
@@ -416,7 +415,8 @@ export interface Notification {
 }
 
 // Portfolio types
-export type PortfolioCategory = "Hair" | "Makeup" | "Combo";
+export type PortfolioCategory = string;
+export type PortfolioFilter = "All" | "Hair" | "Makeup" | "Combo";
 
 export interface PortfolioItem {
   id: number;
@@ -433,29 +433,33 @@ export interface PortfolioGridProps {
   onImageClick: (item: PortfolioItem) => void;
 }
 
+export interface ImageJson {
+  image_url: string;
+  image_name: string;
+  image_size: number;
+  image_dimensions?: {
+    width: number;
+    height: number;
+  };
+  image_type?: string;
+  uploaded_at?: string;
+  artist_id?: string;
+}
+
 export interface PortfolioUploadModalProps {
   open: boolean;
   onClose: () => void;
-  onUpload: (item: any) => void;
-  initialValues?: any;
+  onUpload: (item: PortfolioItem) => void;
+  initialValues?: PortfolioItem | null;
   artistName?: string;
   artistId?: string;
 }
 
 export interface PortfolioImageUploadProps {
   artistId: string;
-  onUpload: (json: any) => void;
+  onUpload: (image: ImageJson | null) => void;
   artistName?: string;
   service?: string;
-}
-
-export interface ImageJson {
-  image_name: string;
-  image_type: string;
-  image_size: number;
-  image_url: string;
-  uploaded_at: string;
-  artist_id: string;
 }
 
 export interface PortfolioStatsProps {
@@ -463,26 +467,36 @@ export interface PortfolioStatsProps {
 }
 
 export interface PortfolioFilterTabsProps {
-  categories: PortfolioCategory[];
-  activeCategory: PortfolioCategory;
-  onCategoryChange: (category: PortfolioCategory) => void;
+  categories: string[];
+  activeCategory: string;
+  onCategoryChange: (category: string) => void;
 }
 
 export interface PortfolioImagePreviewListProps {
   images: string[];
   onRemove: (idx: number) => void;
-  uploadedImage?: { image_url: string } | null;
+  uploadedImage?: ImageJson | null;
 }
 
 export interface PortfolioUploadFormProps {
   title: string;
-  setTitle: (v: string) => void;
-  category: PortfolioCategory;
-  setCategory: (v: PortfolioCategory) => void;
+  setTitle: (title: string) => void;
+  category: string;
+  setCategory: (category: string) => void;
   onUpload: () => void;
   onClose: () => void;
   disabled: boolean;
-  isEdit: boolean;
+  isEdit?: boolean;
+}
+
+export interface PortfolioImageModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  selectedItem: PortfolioItem | null;
+}
+
+export interface PortfolioHeaderProps {
+  onAddClick: () => void;
 }
 
 // Bookings feature types
