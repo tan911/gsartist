@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { Button } from "../ui/button-old";
@@ -29,9 +30,11 @@ export function LogInForm() {
     try {
       const result = await signin(email, password);
       if (result.success) {
+        toast("Event has been created.");
         router.push("/dashboard");
       } else {
         console.error("Login failed:", result.error);
+        toast("Login failed.");
         // You can add error handling here (toast notification, etc.)
       }
     } catch (err) {

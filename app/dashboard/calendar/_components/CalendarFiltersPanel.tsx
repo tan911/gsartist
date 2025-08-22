@@ -4,6 +4,7 @@ import { statusOptions, serviceOptions } from "@/lib/data/mock-data";
 import { Button } from "@/components/ui/buttonnew";
 import { Paragraph } from "@/components/typography/Paragraph";
 import { cn } from "@/lib/utils";
+import { CustomSelect } from "@/components/ui/custom-select";
 
 function useDropdown(initial = false) {
   const [open, setOpen] = useState(initial);
@@ -36,7 +37,24 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Status Filter */}
+        <CustomSelect
+          label="Status"
+          options={statusOptions}
+          value={selectedFilters.status}
+          onChange={(value) => onChange({ ...selectedFilters, status: value })}
+          placeholder=""
+          className=""
+        />
+        <CustomSelect
+          label="Service"
+          options={serviceOptions}
+          value={selectedFilters.service}
+          onChange={(value) => onChange({ ...selectedFilters, service: value })}
+          placeholder=""
+          className=""
+        />
+      </div>
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Paragraph className={cn("mb-2 text-left")}>Status</Paragraph>
           <div className="relative" ref={statusDropdown.ref}>
@@ -92,7 +110,7 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
             )}
           </div>
         </div>
-        {/* Service Filter */}
+
         <div>
           <Paragraph className={cn("mb-2 text-left")}>Service</Paragraph>
 
@@ -149,7 +167,7 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
             )}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

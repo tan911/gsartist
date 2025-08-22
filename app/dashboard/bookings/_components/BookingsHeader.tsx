@@ -4,6 +4,7 @@ import type { BookingsHeaderProps } from "@/types";
 import { Heading2 } from "@/components/typography/Heading2";
 import { cn } from "@/lib/utils";
 import { useDropdown } from "@/lib/hooks/useDropdown";
+import { CustomSelect } from "@/components/ui/custom-select";
 
 const dateRangeOptions = [
   { value: "all", label: "All Time" },
@@ -24,7 +25,15 @@ const BookingsHeader: React.FC<BookingsHeaderProps> = ({
       <Heading2 className={cn("text-left text-gray-900")}>
         Bookings Management
       </Heading2>
-      <div className="relative" ref={dropdownRef}>
+      <CustomSelect
+        label=""
+        options={dateRangeOptions}
+        value={dateRange}
+        onChange={setDateRange}
+        placeholder=""
+        className="max-w-40"
+      />
+      {/* <div className="relative" ref={dropdownRef}>
         <button
           className="flex items-center p-1 md:p-2 bg-white border border-gray-300 rounded-sm shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 transition text-xs md:text-sm"
           onClick={() => setDropdownOpen((open) => !open)}
@@ -57,7 +66,7 @@ const BookingsHeader: React.FC<BookingsHeaderProps> = ({
             ))}
           </ul>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };
