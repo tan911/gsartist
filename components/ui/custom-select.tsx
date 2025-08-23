@@ -64,14 +64,26 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   return (
     <div className={`w-full relative ${className}`} ref={dropdownRef}>
       {label && (
-        <label id="select-label" className="block text-sm font-medium text-gray-700 mb-0 md:mb-2">
+        <label
+          id="select-label"
+          className="block text-sm font-medium text-gray-700 mb-0 md:mb-2">
           {label}
         </label>
       )}
 
       <div
-        className={`w-full border rounded-lg px-4 py-2 bg-white ${error ? "border-red-500" : "border-gray-300"} shadow-sm transition-all focus:outline-none ${!disabled && "hover:border-purple-300"} cursor-pointer flex justify-between items-center ${disabled ? "opacity-50 cursor-not-allowed" : ""} ${
-          isOpen ? `border-${error ? "red" : "purple"}-400 ring-0 ring-${error ? "red" : "purple"}-500` : ""
+        className={`w-full border rounded-lg px-4 py-2 bg-white ${
+          error ? "border-red-500" : "border-gray-300"
+        } shadow-sm transition-all focus:outline-none ${
+          !disabled && "hover:border-purple-300"
+        } cursor-pointer flex justify-between items-center ${
+          disabled ? "opacity-50 cursor-not-allowed" : ""
+        } ${
+          isOpen
+            ? `border-${error ? "red" : "purple"}-400 ring-0 ring-${
+                error ? "red" : "purple"
+              }-500`
+            : ""
         }`}
         onClick={toggleDropdown}
         role="combobox"
@@ -80,10 +92,14 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
         aria-controls="dropdown-options"
         aria-labelledby={label ? "select-label" : undefined}
         aria-invalid={error ? "true" : "false"}
-        aria-describedby={error ? "select-error" : helpText ? "select-help" : undefined}
+        aria-describedby={
+          error ? "select-error" : helpText ? "select-help" : undefined
+        }
         tabIndex={disabled ? -1 : 0}>
         <span
-          className={`${!selectedOption ? "text-gray-400" : "text-gray-700"}`}>
+          className={`${
+            !selectedOption ? "text-gray-400" : "text-gray-700"
+          } text-xs md:text-sm`}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <ChevronDown
@@ -94,12 +110,11 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
       </div>
 
       {isOpen && (
-        <div 
+        <div
           id="dropdown-options"
           className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto"
           role="listbox"
-          aria-labelledby={label ? "select-label" : undefined}
-        >
+          aria-labelledby={label ? "select-label" : undefined}>
           {options.map((option) => (
             <div
               key={option.value}
@@ -118,14 +133,12 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
       )}
 
       {helpText && !error && (
-        <p id="select-help" className="text-xs text-gray-500 mt-1">{helpText}</p>
+        <p id="select-help" className="text-xs text-gray-500 mt-1">
+          {helpText}
+        </p>
       )}
       {error && (
-        <p 
-          id="select-error" 
-          className="text-xs text-red-600 mt-1"
-          role="alert"
-        >
+        <p id="select-error" className="text-xs text-red-600 mt-1" role="alert">
           {error}
         </p>
       )}

@@ -3,6 +3,7 @@
 import React from "react";
 import { MapPin, Maximize, Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
+import { useLocationMap } from "@/lib/context/LocationMapContext";
 
 // Dynamically import map components to avoid SSR issues
 const LocationMap = dynamic(() => import("./LocationMap"), { ssr: false });
@@ -13,22 +14,23 @@ const LocationMapModal = dynamic(() => import("./LocationMapModal"), {
 interface LocationMapContainerProps {
   localCoordinates: [number, number] | null;
   isEditing: boolean;
-  isGeocoding: boolean;
-  isFullMapOpen: boolean;
   onMarkerDragEnd: (coordinates: [number, number]) => void;
-  onFullMapToggle: (isOpen: boolean) => void;
-  travelRadius?: number; // in kilometers
+  travelRadius?: number; // in miles
 }
 
 const LocationMapContainer: React.FC<LocationMapContainerProps> = ({
   localCoordinates,
   isEditing,
-  isGeocoding,
-  isFullMapOpen,
   onMarkerDragEnd,
-  onFullMapToggle,
   travelRadius,
 }) => {
+  // Use the shared context for map state
+  const { isGeocoding, isFullMapOpen, setIsFullMapOpen } = useLocationMap();
+
+  const handleFullMapToggle = (isOpen: boolean) => {
+    setIsFullMapOpen(isOpen);
+  };
+
   return (
     <div>
       <div className="bg-gray-100 rounded-lg flex items-center justify-center h-[300px] relative mb-1">
@@ -36,7 +38,7 @@ const LocationMapContainer: React.FC<LocationMapContainerProps> = ({
         {localCoordinates && (
           <button
             type="button"
-            onClick={() => onFullMapToggle(true)}
+            onClick={() => handleFullMapToggle(true)}
             className="absolute top-2 right-2 p-2 bg-white rounded-full shadow hover:bg-purple-100 transition-colors z-20"
             title="Full View">
             <Maximize className="h-5 w-5 text-purple-600" />
@@ -78,7 +80,7 @@ const LocationMapContainer: React.FC<LocationMapContainerProps> = ({
               lng: localCoordinates[1],
             }}
             isOpen={isFullMapOpen}
-            onClose={() => onFullMapToggle(false)}
+            onClose={() => handleFullMapToggle(false)}
             onMarkerDragEnd={isEditing ? onMarkerDragEnd : undefined}
             isGeocoding={isGeocoding}
             travelRadius={travelRadius}

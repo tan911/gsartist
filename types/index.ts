@@ -195,7 +195,22 @@ export interface LocationData {
   city: string;
   region: string;
   postalCode: string;
+  country: string;
   coordinates: Coordinates;
+}
+
+// Geocoding Types
+export interface GeocodeResult {
+  lat: number;
+  lng: number;
+}
+
+export interface ReverseGeocodeResult {
+  address: string;
+  city: string;
+  region: string;
+  postalCode: string;
+  country: string;
 }
 
 export interface LocationSettings {
@@ -214,6 +229,7 @@ export interface LocationFormData {
   city: string;
   region: string;
   postalCode: string;
+  country: string;
   coordinates: Coordinates;
 }
 

@@ -4,13 +4,13 @@ import { Coordinates, LocationData, RadiusOption } from "@/types";
  * Calculate distance between two coordinates using Haversine formula
  * @param coord1 First coordinate
  * @param coord2 Second coordinate
- * @returns Distance in kilometers
+ * @returns Distance in miles
  */
 export const calculateDistance = (
   coord1: Coordinates,
   coord2: Coordinates
 ): number => {
-  const R = 6371; // Earth's radius in kilometers
+  const R = 3958.8; // Earth's radius in miles
   const dLat = ((coord2.lat - coord1.lat) * Math.PI) / 180;
   const dLng = ((coord2.lng - coord1.lng) * Math.PI) / 180;
   const a =
@@ -27,7 +27,7 @@ export const calculateDistance = (
  * Check if a location is within the specified radius
  * @param baseLocation Base location coordinates
  * @param targetLocation Target location coordinates
- * @param radius Radius in kilometers
+ * @param radius Radius in miles
  * @returns True if within radius
  */
 export const isWithinRadius = (
@@ -49,7 +49,9 @@ export const formatCoordinates = (
   coordinates: Coordinates,
   precision: number = 6
 ): string => {
-  return `Lat: ${coordinates.lat.toFixed(precision)}, Lng: ${coordinates.lng.toFixed(precision)}`;
+  return `Lat: ${coordinates.lat.toFixed(
+    precision
+  )}, Lng: ${coordinates.lng.toFixed(precision)}`;
 };
 
 /**
@@ -62,12 +64,12 @@ export const validateLocationData = (
 ): { isValid: boolean; errors: string[] } => {
   const errors: string[] = [];
 
-  if (!locationData.address?.trim()) {
-    errors.push("Address is required");
-  }
-
   if (!locationData.city?.trim()) {
     errors.push("City is required");
+  }
+
+  if (!locationData.address?.trim()) {
+    errors.push("Street address is required");
   }
 
   if (!locationData.region?.trim()) {
