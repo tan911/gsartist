@@ -1,3 +1,3 @@
-import UnderDevelopment from "../common/UnderDevelopment";
+import UnderDevelopment from '../common/UnderDevelopment'
 
-export default UnderDevelopment;
+export default UnderDevelopment

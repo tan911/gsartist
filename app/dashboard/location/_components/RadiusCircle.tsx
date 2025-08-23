@@ -1,45 +1,38 @@
-"use client";
+'use client'
 
-import React from "react";
-import dynamic from "next/dynamic";
+import React from 'react'
+import dynamic from 'next/dynamic'
 
 // Dynamically import Circle component to avoid SSR issues
-const Circle = dynamic(
-  () => import("react-leaflet").then((mod) => mod.Circle),
-  { ssr: false }
-);
+const Circle = dynamic(() => import('react-leaflet').then((mod) => mod.Circle), { ssr: false })
 
 export interface RadiusCircleProps {
-  center: [number, number]; // [lat, lng]
-  radius: number; // in kilometers
-  isVisible: boolean;
+    center: [number, number] // [lat, lng]
+    radius: number // in kilometers
+    isVisible: boolean
 }
 
-const RadiusCircle: React.FC<RadiusCircleProps> = ({
-  center,
-  radius,
-  isVisible,
-}) => {
-  if (!isVisible) {
-    return null;
-  }
+const RadiusCircle: React.FC<RadiusCircleProps> = ({ center, radius, isVisible }) => {
+    if (!isVisible) {
+        return null
+    }
 
-  // Convert kilometers to meters for Leaflet Circle
-  const radiusInMeters = radius * 1000;
+    // Convert kilometers to meters for Leaflet Circle
+    const radiusInMeters = radius * 1000
 
-  return (
-    <Circle
-      center={center}
-      radius={radiusInMeters}
-      pathOptions={{
-        color: "#9333ea", // Purple color matching the theme
-        fillColor: "#9333ea",
-        fillOpacity: 0.1,
-        weight: 2,
-        opacity: 0.6,
-      }}
-    />
-  );
-};
+    return (
+        <Circle
+            center={center}
+            radius={radiusInMeters}
+            pathOptions={{
+                color: '#9333ea', // Purple color matching the theme
+                fillColor: '#9333ea',
+                fillOpacity: 0.1,
+                weight: 2,
+                opacity: 0.6,
+            }}
+        />
+    )
+}
 
-export default RadiusCircle;
+export default RadiusCircle

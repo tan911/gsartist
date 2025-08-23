@@ -1,5 +1,5 @@
-import UnderDevelopment from "../common/UnderDevelopment";
+import UnderDevelopment from '../common/UnderDevelopment'
 
-const PrivacyDataSection = UnderDevelopment;
+const PrivacyDataSection = UnderDevelopment
 
-export default PrivacyDataSection;
+export default PrivacyDataSection
