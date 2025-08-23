@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { Service } from "@/types";
 import { Select } from "@/components/ui/select";
 import { DollarSign } from "lucide-react";
+import { CustomSelect } from "@/components/ui/custom-select";
+import { serviceCategoryOptions, durationOptions } from "@/lib/data/mock-data";
+import { Input } from "@/components/ui/inputLabel";
+import { TextArea } from "@/components/ui/inputTextArea";
 
 interface AddServiceFormProps {
   onSubmit: (service: Service) => void;
@@ -105,7 +109,19 @@ export const AddServiceForm: React.FC<AddServiceFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block mb-1 font-medium">Service Name</label>
+        <Input
+          type="text"
+          label="Service Name"
+          value={name}
+          placeholder="ex. Wedding Makeup"
+          onChange={(e) => setName(e.target.value)}
+          helpText="This is what clients will see—make it descriptive and appealing."
+          min="1"
+          error={errors.name}
+          id="service-name"
+          name="service-name"
+        />
+        {/* <label className="block mb-1 font-medium">Service Name</label>
         <input
           type="text"
           value={name}
@@ -119,10 +135,21 @@ export const AddServiceForm: React.FC<AddServiceFormProps> = ({
         </span>
         {errors.name && (
           <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-        )}
+        )} */}
       </div>
       <div>
-        <label className="block mb-1 font-medium">Description</label>
+        <TextArea
+          label="Description"
+          value={description}
+          placeholder="Describe your service in a way that attracts clients."
+          onChange={(e) => setDescription(e.target.value)}
+          helpText="Explain what's included, who it's for, or what makes it special."
+          error={errors.description}
+          id="service-description"
+          name="service-description"
+        />
+
+        {/* <label className="block mb-1 font-medium">Description</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -135,40 +162,40 @@ export const AddServiceForm: React.FC<AddServiceFormProps> = ({
         </span>
         {errors.description && (
           <p className="text-red-500 text-sm mt-1">{errors.description}</p>
-        )}
+        )} */}
       </div>
       <div>
-        <Select
+        <CustomSelect
           label="Category"
+          options={categoryOptions.map((cat) => ({
+            value: cat,
+            label: cat,
+          }))}
           value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          onChange={(value) => setCategory(value)}
+          placeholder="Select category"
+          className=""
           error={errors.category}
-          required>
-          <option value="">Select category</option>
-          {categoryOptions.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </Select>
+          helpText="Select the type of service you provide"
+        />
       </div>
       <div>
-        <Select
+        <CustomSelect
           label="Duration"
+          options={durationOptions.map((dur) => ({
+            value: dur,
+            label: dur,
+          }))}
           value={duration}
-          onChange={(e) => setDuration(e.target.value)}
+          onChange={(value) => setDuration(value)}
+          placeholder="Select duration"
+          className=""
           error={errors.duration}
-          required>
-          <option value="">Select duration</option>
-          {durationOptions.map((dur) => (
-            <option key={dur} value={dur}>
-              {dur}
-            </option>
-          ))}
-        </Select>
+          helpText="How long will this service take"
+        />
       </div>
       <div>
-        <label className="block mb-1 font-medium">Price</label>
+        <label id="price-label" className="block mb-1 font-medium">Price</label>
         <div className="relative">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
             <DollarSign className="h-4 w-4" />
@@ -182,14 +209,19 @@ export const AddServiceForm: React.FC<AddServiceFormProps> = ({
             onKeyDown={(e) => {
               if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
             }}
-            className="w-full border border-gray-300 rounded  px-8 py-2 pl-10 focus:outline-none focus:ring-0 focus:border-purple-400"
+            className={`w-full border ${errors.price ? "border-red-500" : "border-gray-300"} rounded-md px-8 py-2 pl-10 focus:outline-none focus:ring-0 focus:${errors.price ? "border-red-400" : "border-purple-400"}`}
             required
             placeholder="Enter price ex. 90"
+            aria-labelledby="price-label"
+            aria-invalid={errors.price ? "true" : "false"}
+            aria-describedby={errors.price ? "price-error" : "price-help"}
+            id="service-price"
+            name="service-price"
           />
         </div>
-        <span className="text-xs text-gray-500">Enter the price in USD</span>
+        <span id="price-help" className="text-xs text-gray-500">Enter the price in USD</span>
         {errors.price && (
-          <p className="text-red-500 text-sm mt-1">{errors.price}</p>
+          <p id="price-error" className="text-xs text-red-600 mt-1" role="alert">{errors.price}</p>
         )}
       </div>
       <div className="flex justify-end space-x-2">

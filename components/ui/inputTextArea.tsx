@@ -1,10 +1,11 @@
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface TextAreaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
   error?: string;
   helpText?: string;
 }
 
-export const Input: React.FC<InputProps> = ({
+export const TextArea: React.FC<TextAreaProps> = ({
   label,
   error,
   helpText,
@@ -18,7 +19,7 @@ export const Input: React.FC<InputProps> = ({
           {label}
         </label>
       )}
-      <input
+      <textarea
         className={`w-full border ${error ? "border-red-500" : "border-gray-300"} rounded-md px-4 py-2 focus:outline-none focus:ring-1 ${error ? "focus:ring-red-500" : "focus:ring-purple-500"} focus:border-transparent appearance-none ${className}`}
         aria-invalid={error ? "true" : "false"}
         aria-describedby={error ? `${props.id || props.name}-error` : undefined}
