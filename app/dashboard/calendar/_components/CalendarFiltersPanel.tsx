@@ -1,60 +1,60 @@
-import React, { useState, useRef } from "react";
-import type { CalendarFiltersPanelProps } from "@/types";
-import { statusOptions, serviceOptions } from "@/lib/data/mock-data";
-import { Button } from "@/components/ui/buttonnew";
-import { Paragraph } from "@/components/typography/Paragraph";
-import { cn } from "@/lib/utils";
-import { CustomSelect } from "@/components/ui/custom-select";
+import React, { useState, useRef } from 'react'
+import type { CalendarFiltersPanelProps } from '@/types'
+import { statusOptions, serviceOptions } from '@/lib/data/mock-data'
+import { Button } from '@/components/ui/buttonnew'
+import { Paragraph } from '@/components/typography/Paragraph'
+import { cn } from '@/lib/utils'
+import { CustomSelect } from '@/components/ui/custom-select'
 
 function useDropdown(initial = false) {
-  const [open, setOpen] = useState(initial);
-  const ref = useRef<HTMLDivElement>(null);
-  React.useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    }
-    if (open) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [open]);
-  return { open, setOpen, ref };
+    const [open, setOpen] = useState(initial)
+    const ref = useRef<HTMLDivElement>(null)
+    React.useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (ref.current && !ref.current.contains(event.target as Node)) {
+                setOpen(false)
+            }
+        }
+        if (open) {
+            document.addEventListener('mousedown', handleClickOutside)
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [open])
+    return { open, setOpen, ref }
 }
 
 export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
-  selectedFilters,
-  onChange,
+    selectedFilters,
+    onChange,
 }) => {
-  const statusDropdown = useDropdown();
-  const serviceDropdown = useDropdown();
+    const statusDropdown = useDropdown()
+    const serviceDropdown = useDropdown()
 
-  return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <CustomSelect
-          label="Status"
-          options={statusOptions}
-          value={selectedFilters.status}
-          onChange={(value) => onChange({ ...selectedFilters, status: value })}
-          placeholder=""
-          className=""
-        />
-        <CustomSelect
-          label="Service"
-          options={serviceOptions}
-          value={selectedFilters.service}
-          onChange={(value) => onChange({ ...selectedFilters, service: value })}
-          placeholder=""
-          className=""
-        />
-      </div>
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    return (
+        <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <CustomSelect
+                    label="Status"
+                    options={statusOptions}
+                    value={selectedFilters.status}
+                    onChange={(value) => onChange({ ...selectedFilters, status: value })}
+                    placeholder=""
+                    className=""
+                />
+                <CustomSelect
+                    label="Service"
+                    options={serviceOptions}
+                    value={selectedFilters.service}
+                    onChange={(value) => onChange({ ...selectedFilters, service: value })}
+                    placeholder=""
+                    className=""
+                />
+            </div>
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Paragraph className={cn("mb-2 text-left")}>Status</Paragraph>
           <div className="relative" ref={statusDropdown.ref}>
@@ -168,6 +168,6 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
           </div>
         </div>
       </div> */}
-    </div>
-  );
-};
+        </div>
+    )
+}
