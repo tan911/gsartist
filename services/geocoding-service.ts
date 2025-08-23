@@ -1,17 +1,4 @@
-import type { LocationFormData } from "@/types";
-
-export interface GeocodeResult {
-  lat: number;
-  lng: number;
-}
-
-export interface ReverseGeocodeResult {
-  address: string;
-  city: string;
-  region: string;
-  postalCode: string;
-  country: string;
-}
+import type { LocationFormData, GeocodeResult, ReverseGeocodeResult } from "@/types";
 
 // Geocode city to coordinates using Nominatim
 export async function geocodeAddress(city: string): Promise<GeocodeResult> {

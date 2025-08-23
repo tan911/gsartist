@@ -7,24 +7,14 @@ interface BaseLocationSectionProps {
   isEditing: boolean;
   onLocationUpdate: (field: keyof LocationFormData, value: string) => void;
   onGetCurrentLocation: () => void;
-  travelRadius?: number; // in kilometers
+  travelRadius?: number; // in miles
 }
 
-const BaseLocationSection: React.FC<BaseLocationSectionProps> = ({
-  locationData,
-  isEditing,
-  onLocationUpdate,
-  onGetCurrentLocation,
-  travelRadius,
-}) => {
-  return (
-    <LocationForm
-      locationData={locationData}
-      isEditing={isEditing}
-      onLocationUpdate={onLocationUpdate}
-      travelRadius={travelRadius}
-    />
-  );
+// Simplified component that directly passes props to LocationForm
+const BaseLocationSection: React.FC<BaseLocationSectionProps> = (props) => {
+  const { onGetCurrentLocation, ...locationFormProps } = props;
+
+  return <LocationForm {...locationFormProps} />;
 };
 
 export default BaseLocationSection;
