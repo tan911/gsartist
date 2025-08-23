@@ -1,5 +1,5 @@
-import UnderDevelopment from "../common/UnderDevelopment";
+import UnderDevelopment from '../common/UnderDevelopment'
 
-const PaymentBillingSection = UnderDevelopment;
+const PaymentBillingSection = UnderDevelopment
 
-export default PaymentBillingSection;
+export default PaymentBillingSection

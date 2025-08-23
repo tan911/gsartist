@@ -1,5 +1,5 @@
-import CustomSelectExample from "./custom-select-example";
+import CustomSelectExample from './custom-select-example'
 
 export default function ExamplesPage() {
-  return <CustomSelectExample />;
+    return <CustomSelectExample />
 }
