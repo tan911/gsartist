@@ -21,9 +21,6 @@ const LocationHeader: React.FC<LocationHeaderProps> = ({
     <div className="flex items-center justify-between">
         <div>
             <Heading2 className={cn('text-left text-gray-900')}>Location</Heading2>
-            <p className="text-gray-600 mt-1">
-                Manage your service location and travel preferences
-            </p>
         </div>
         <div className="flex items-center space-x-3">
             {isEditing ? (

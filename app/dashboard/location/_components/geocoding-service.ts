@@ -10,15 +10,16 @@ export interface ReverseGeocodeResult {
     city: string
     region: string
     postalCode: string
+    country: string
 }
 
-// Geocode address to coordinates using Nominatim
-export async function geocodeAddress(address: string): Promise<GeocodeResult> {
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
+// Geocode city to coordinates using Nominatim
+export async function geocodeAddress(city: string): Promise<GeocodeResult> {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}`
     const res = await fetch(url)
-    if (!res.ok) throw new Error('Failed to geocode address')
+    if (!res.ok) throw new Error('Failed to geocode city')
     const data = await res.json()
-    if (!data[0]) throw new Error('No results found')
+    if (!data[0]) throw new Error('No results found for this city')
     return {
         lat: parseFloat(data[0].lat),
         lng: parseFloat(data[0].lon),
@@ -126,11 +127,15 @@ export async function reverseGeocode(lat: number, lng: number): Promise<ReverseG
         // Get postal code - your console log shows 'postcode' field
         const postalCode = address.postcode || ''
 
+        // Get country
+        const country = address.country || ''
+
         return {
             address: streetAddress,
             city,
             region,
             postalCode,
+            country,
         }
     } catch (error) {
         console.error('Reverse geocoding error:', error)

@@ -38,6 +38,7 @@ const LocationTab: React.FC<LocationTabProps> = ({ className = '' }) => {
                         region: '',
                         postalCode: '',
                         coordinates: { lat: 0, lng: 0 },
+                        country: '',
                         [field]: value,
                     }
                     return {

@@ -13,7 +13,7 @@ interface LocationMapModalProps {
     onClose: () => void
     onMarkerDragEnd?: (coords: [number, number]) => void
     isGeocoding?: boolean
-    travelRadius?: number // in kilometers
+    travelRadius?: number // in miles
     showRadius?: boolean // whether to show the radius circle
 }
 

@@ -17,4 +17,4 @@ export { default as LocationMapContainer } from './LocationMapContainer'
 export { default as RadiusCircle } from './RadiusCircle'
 
 // Services
-export * from './geocoding-service'
+export * from '@/services/geocoding-service'

@@ -8,7 +8,7 @@ const Circle = dynamic(() => import('react-leaflet').then((mod) => mod.Circle), 
 
 export interface RadiusCircleProps {
     center: [number, number] // [lat, lng]
-    radius: number // in kilometers
+    radius: number // in miles
     isVisible: boolean
 }
 
@@ -17,8 +17,8 @@ const RadiusCircle: React.FC<RadiusCircleProps> = ({ center, radius, isVisible }
         return null
     }
 
-    // Convert kilometers to meters for Leaflet Circle
-    const radiusInMeters = radius * 1000
+    // Convert miles to meters for Leaflet Circle
+    const radiusInMeters = radius * 1609.34
 
     return (
         <Circle

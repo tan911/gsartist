@@ -70,9 +70,17 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
             )}
 
             <div
-                className={`w-full border rounded-lg px-4 py-2 bg-white ${error ? 'border-red-500' : 'border-gray-300'} shadow-sm transition-all focus:outline-none ${!disabled && 'hover:border-purple-300'} cursor-pointer flex justify-between items-center ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${
+                className={`w-full border rounded-lg px-4 py-2 bg-white ${
+                    error ? 'border-red-500' : 'border-gray-300'
+                } shadow-sm transition-all focus:outline-none ${
+                    !disabled && 'hover:border-purple-300'
+                } cursor-pointer flex justify-between items-center ${
+                    disabled ? 'opacity-50 cursor-not-allowed' : ''
+                } ${
                     isOpen
-                        ? `border-${error ? 'red' : 'purple'}-400 ring-0 ring-${error ? 'red' : 'purple'}-500`
+                        ? `border-${error ? 'red' : 'purple'}-400 ring-0 ring-${
+                              error ? 'red' : 'purple'
+                          }-500`
                         : ''
                 }`}
                 onClick={toggleDropdown}
@@ -85,7 +93,11 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
                 aria-describedby={error ? 'select-error' : helpText ? 'select-help' : undefined}
                 tabIndex={disabled ? -1 : 0}
             >
-                <span className={`${!selectedOption ? 'text-gray-400' : 'text-gray-700'}`}>
+                <span
+                    className={`${
+                        !selectedOption ? 'text-gray-400' : 'text-gray-700'
+                    } text-xs md:text-sm`}
+                >
                     {selectedOption ? selectedOption.label : placeholder}
                 </span>
                 <ChevronDown

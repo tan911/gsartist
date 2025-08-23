@@ -24,7 +24,7 @@ const RadiusCircle = dynamic(() => import('./RadiusCircle'), { ssr: false })
 export interface LocationMapProps {
     coordinates: [number, number] // [lat, lng]
     onMarkerDragEnd?: (coords: [number, number]) => void
-    travelRadius?: number // in kilometers
+    travelRadius?: number // in miles
     showRadius?: boolean // whether to show the radius circle
 }
 

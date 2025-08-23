@@ -1,7 +1,11 @@
 'use client'
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { Globe } from 'lucide-react'
 import { sanitizeLocationInput } from '@/lib/utils/location-utils'
+import { Heading3 } from '@/components/typography/Heading3'
+import { cn } from '@/lib/utils'
+import { Paragraph } from '@/components/typography/Paragraph'
+import { Input } from '@/components/ui/inputLabel'
 
 interface ServiceAreasSectionProps {
     preferredServiceAreas: string[]
@@ -17,51 +21,222 @@ const ServiceAreasSection: React.FC<ServiceAreasSectionProps> = ({
     onRemoveServiceArea,
 }) => {
     const [newServiceArea, setNewServiceArea] = useState('')
+    const [showDropdown, setShowDropdown] = useState(false)
+    const [cityOptions, setCityOptions] = useState<{ value: string; label: string }[]>([])
+    const [searchQuery, setSearchQuery] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
+
+    // Fetch city suggestions from Nominatim when search query changes
+    useEffect(() => {
+        const fetchCitySuggestions = async () => {
+            if (searchQuery.length < 2) {
+                setCityOptions([])
+                return
+            }
+
+            setIsLoading(true)
+            try {
+                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+                    searchQuery
+                )}&addressdetails=1&limit=8`
+                const response = await fetch(url)
+
+                if (!response.ok) throw new Error('Failed to fetch city suggestions')
+
+                const data = await response.json()
+
+                // Extract city names from results
+                const cities = data.map((item: any) => {
+                    const address = item.address || {}
+                    const city =
+                        address.city ||
+                        address.town ||
+                        address.village ||
+                        item.display_name.split(',')[0]
+
+                    // Create a more descriptive label with city and region/country
+                    const region = address.state || address.region || address.province || ''
+                    const country = address.country || ''
+
+                    let label = city
+                    if (region && country) {
+                        label = `${city}, ${region}, ${country}`
+                    } else if (region) {
+                        label = `${city}, ${region}`
+                    } else if (country) {
+                        label = `${city}, ${country}`
+                    }
+
+                    return {
+                        value: city,
+                        label: label,
+                    }
+                })
+
+                // Remove duplicates based on city name
+                const uniqueOptions = cities.filter(
+                    (
+                        option: { value: string; label: string },
+                        index: number,
+                        self: { value: string; label: string }[]
+                    ) =>
+                        index ===
+                        self.findIndex(
+                            (o: { value: string; label: string }) => o.value === option.value
+                        )
+                )
+
+                setCityOptions(uniqueOptions)
+            } catch (error) {
+                console.error('Error fetching city suggestions:', error)
+                setCityOptions([])
+            } finally {
+                setIsLoading(false)
+            }
+        }
+
+        // Debounce the API call
+        const timer = setTimeout(() => {
+            if (searchQuery.length >= 2) {
+                fetchCitySuggestions()
+            }
+        }, 300)
+
+        return () => clearTimeout(timer)
+    }, [searchQuery])
+
+    // Handle city selection from dropdown
+    const handleCitySelect = useCallback((value: string) => {
+        setNewServiceArea(value)
+        setSearchQuery(value)
+        setShowDropdown(false)
+    }, [])
+
+    // Handle input change for search
+    const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = sanitizeLocationInput(e.target.value)
+        setNewServiceArea(value)
+        setSearchQuery(value)
+        setShowDropdown(value.length > 0)
+    }, [])
 
     const handleAddServiceArea = useCallback(() => {
         if (newServiceArea.trim() && !preferredServiceAreas.includes(newServiceArea.trim())) {
             onAddServiceArea(newServiceArea.trim())
             setNewServiceArea('')
+            setSearchQuery('')
+            setShowDropdown(false)
+            setCityOptions([])
         }
     }, [newServiceArea, preferredServiceAreas, onAddServiceArea])
+    // const handleAddServiceArea = useCallback(() => {
+    //   if (
+    //     newServiceArea.trim() &&
+    //     !preferredServiceAreas.includes(newServiceArea.trim())
+    //   ) {
+    //     onAddServiceArea(newServiceArea.trim());
+    //     setNewServiceArea("");
+    //   }
+    // }, [newServiceArea, preferredServiceAreas, onAddServiceArea]);
 
     const handleKeyPress = useCallback(
         (e: React.KeyboardEvent) => {
             if (e.key === 'Enter') {
+                e.preventDefault()
                 handleAddServiceArea()
+            } else if (e.key === 'Escape') {
+                setShowDropdown(false)
             }
         },
         [handleAddServiceArea]
     )
+    // const handleKeyPress = useCallback(
+    //   (e: React.KeyboardEvent) => {
+    //     if (e.key === "Enter") {
+    //       handleAddServiceArea();
+    //     }
+    //   },
+    //   [handleAddServiceArea]
+    // );
 
-    const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setNewServiceArea(sanitizeLocationInput(e.target.value))
-    }, [])
+    // const handleInputChange = useCallback(
+    //   (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     setNewServiceArea(sanitizeLocationInput(e.target.value));
+    //   },
+    //   []
+    // );
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = () => {
+            setShowDropdown(false)
+        }
+
+        if (showDropdown) {
+            document.addEventListener('click', handleClickOutside)
+            return () => document.removeEventListener('click', handleClickOutside)
+        }
+    }, [showDropdown])
 
     return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-2 md:p-4">
+            <Heading3 className={cn('text-left text-gray-900 mb-2')}>
+                <span className="flex items-center">
                     <Globe className="h-5 w-5 text-purple-600 mr-2" />
                     Preferred Service Areas
-                </h3>
-            </div>
-
-            <p className="text-sm text-gray-600 mb-4">
+                </span>
+            </Heading3>
+            <Paragraph className={cn('text-left text-xs md:text-sm mb-2 md:mb-4')}>
                 Specify cities or regions where you prefer to provide services. This helps with
                 client matching.
-            </p>
+            </Paragraph>
 
             {isEditing && (
                 <div className="flex space-x-2 mb-4">
-                    <input
+                    <Input
                         type="text"
-                        value={newServiceArea}
+                        label=""
+                        value={newServiceArea || ''}
+                        placeholder="Search by City"
                         onChange={handleInputChange}
-                        onKeyPress={handleKeyPress}
-                        placeholder="Add a city or region..."
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                        onKeyDown={handleKeyPress}
+                        helpText=""
+                        min="1"
+                        // error={errors.name}
+                        id="preferredcity-name"
+                        name="preferredcity-name"
+                        disabled={!isEditing}
                     />
+                    {showDropdown && searchQuery && isEditing && (
+                        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
+                            {isLoading ? (
+                                <div className="px-4 py-2 text-gray-500 italic">
+                                    Loading suggestions...
+                                </div>
+                            ) : cityOptions.length > 0 ? (
+                                cityOptions.map((option) => (
+                                    <div
+                                        key={option.value}
+                                        className="px-4 py-2 cursor-pointer hover:bg-purple-50 text-gray-700 transition-colors"
+                                        onClick={() => handleCitySelect(option.value)}
+                                    >
+                                        {option.label}
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="px-4 py-2 text-gray-500 italic">
+                                    No cities found
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    {/* <input
+            type="text"
+            value={newServiceArea}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyPress}
+            placeholder="Add a city or region..."
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500 transition-colors"
+          /> */}
                     <button
                         onClick={handleAddServiceArea}
                         disabled={!newServiceArea.trim()}

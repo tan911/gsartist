@@ -3,6 +3,7 @@
 import React from 'react'
 import { CheckCircle, XCircle } from 'lucide-react'
 import { Notification } from '@/lib/hooks/useLocationGeocoding'
+import { useLocationMap } from '@/lib/context/LocationMapContext'
 
 interface LocationNotificationProps {
     notification: Notification

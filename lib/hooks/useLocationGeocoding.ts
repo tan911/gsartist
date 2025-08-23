@@ -2,10 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { LocationFormData } from '@/types'
-import {
-    geocodeAddress,
-    reverseGeocode,
-} from '@/app/dashboard/location/_components/geocoding-service'
+import { geocodeAddress, reverseGeocode } from '@/services/geocoding-service'
 
 // Import the Notification type from the location components
 export type Notification = {
@@ -26,6 +23,7 @@ export const useLocationGeocoding = ({ onLocationUpdate }: UseLocationGeocodingP
         onLocationUpdate('city', '')
         onLocationUpdate('region', '')
         onLocationUpdate('postalCode', '')
+        onLocationUpdate('country', '')
     }, [onLocationUpdate])
 
     const handleMarkerDragEnd = useCallback(
@@ -63,6 +61,7 @@ export const useLocationGeocoding = ({ onLocationUpdate }: UseLocationGeocodingP
                 onLocationUpdate('city', result.city)
                 onLocationUpdate('region', result.region)
                 onLocationUpdate('postalCode', result.postalCode)
+                onLocationUpdate('country', result.country)
 
                 // Update coordinates in parent state after successful address fetch
                 onLocationUpdate('coordinates', { lat, lng })
@@ -93,22 +92,22 @@ export const useLocationGeocoding = ({ onLocationUpdate }: UseLocationGeocodingP
     )
 
     const handleGeocodeAddress = useCallback(
-        async (address: string) => {
-            if (!address) return
+        async (city: string) => {
+            if (!city) return
             setIsGeocoding(true)
             setNotification(null)
 
             try {
-                const coords = await geocodeAddress(address)
+                const coords = await geocodeAddress(city)
                 onLocationUpdate('coordinates', coords)
                 setNotification({
                     type: 'success',
-                    message: 'Map updated from address!',
+                    message: 'Map updated from city!',
                 })
             } catch (err) {
                 setNotification({
                     type: 'error',
-                    message: 'Failed to find location for address.',
+                    message: 'Failed to find location for this city.',
                 })
             } finally {
                 setIsGeocoding(false)

@@ -1,5 +1,9 @@
 import React from 'react'
 import { Settings, AlertCircle } from 'lucide-react'
+import { Heading3 } from '@/components/typography/Heading3'
+import { Paragraph } from '@/components/typography/Paragraph'
+import { cn } from '@/lib/utils'
+import { Heading4 } from '@/components/typography/Heading4'
 
 interface BookingSettingsSectionProps {
     manualAcceptanceOutsideRadius: boolean
@@ -14,20 +18,23 @@ const BookingSettingsSection: React.FC<BookingSettingsSectionProps> = ({
     onToggleManualAcceptance,
     travelRadius,
 }) => (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-8">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
-            <Settings className="h-5 w-5 text-purple-600 mr-2" />
-            Booking Settings
-        </h3>
-
-        <div className="space-y-4">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-2 md:p-4">
+        <Heading3 className={cn('text-left text-gray-900 mb-2 md:mb-4')}>
+            <span className="flex items-center">
+                <Settings className="h-5 w-5 text-purple-600 mr-2" />
+                Booking Settings
+            </span>
+        </Heading3>
+        <div className="space-y-2 md:space-y-4">
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div>
-                    <h4 className="font-medium text-gray-900">Manual Acceptance Outside Radius</h4>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <Heading4 className={cn('text-left text-gray-900 font-normal')}>
+                        Manual Acceptance Outside Radius
+                    </Heading4>
+                    <Paragraph className={cn('text-left text-xs md:text-sm ')}>
                         When enabled, bookings outside your travel radius will require manual
                         approval
-                    </p>
+                    </Paragraph>
                 </div>
                 <button
                     onClick={() => isEditing && onToggleManualAcceptance()}
@@ -60,8 +67,8 @@ const BookingSettingsSection: React.FC<BookingSettingsSectionProps> = ({
                         <div className="text-sm text-yellow-800">
                             <p className="font-medium">Manual Approval Enabled</p>
                             <p className="mt-1">
-                                You'll receive booking requests from outside your {travelRadius}
-                                km radius. Review and approve/decline these requests manually.
+                                You'll receive booking requests from outside your {travelRadius} mi
+                                radius. Review and approve/decline these requests manually.
                             </p>
                         </div>
                     </div>
