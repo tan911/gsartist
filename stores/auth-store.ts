@@ -1,11 +1,11 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { User, Session } from 'better-auth'
-import { authClient } from '@/lib/auth'
+import { Session } from 'better-auth'
+import { authClient, ExtendedUser } from '@/lib/auth'
 import { apiService } from '@/services'
 
 export interface IAuthState {
-    user: User | null
+    user: ExtendedUser | null
     session: Session | null
     isLoading: boolean
     // isInitialized: boolean;
@@ -46,7 +46,7 @@ export const useAuthStore = create<AuthStore>()(
 
                     if (result.data) {
                         set({
-                            user: result.data.user,
+                            user: result.data.user as ExtendedUser,
                             // session: result.data.session, // Added session
                             isLoading: false,
                         })
@@ -83,7 +83,7 @@ export const useAuthStore = create<AuthStore>()(
                     if (result.data) {
                         const session = await authClient.getSession()
                         set({
-                            user: result.data.user,
+                            user: result.data.user as ExtendedUser,
                             session: session.data?.session,
                             isLoading: false,
                         })
@@ -127,7 +127,7 @@ export const useAuthStore = create<AuthStore>()(
                     const session = await authClient.getSession()
                     if (session.data) {
                         set({
-                            user: session.data.user,
+                            user: session.data.user as ExtendedUser,
                             session: session.data.session,
                         })
                     } else {

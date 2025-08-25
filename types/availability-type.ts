@@ -1,4 +1,5 @@
 export interface WorkingHours {
+    id: number
     isActive: boolean
     startTime: string
     endTime: string
@@ -47,4 +48,10 @@ export type Availability = {
         createdAt: string
         updatedAt: string
     }[]
+}
+
+export interface BlackoutDate {
+    id: number
+    date: string
+    reason: string
 }

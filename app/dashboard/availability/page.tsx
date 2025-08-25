@@ -1,233 +1,108 @@
 'use client'
-import React, { useEffect, useState, useCallback } from 'react'
-import { Save, Plus, X } from 'lucide-react'
+
+import React, { useEffect } from 'react'
+import { Save } from 'lucide-react'
 import { Button } from '@/components/ui/buttonnew'
-import { Input } from '@/components/ui/inputLabel'
-import { Card } from '@/components/ui/card'
-import {
-    blackoutDates as mockBlackoutDates,
-    workingHours as mockWorkingHours,
-    availabilitySettings as mockAvailabilitySettings,
-} from '@/lib/data/mock-data'
-import type { WeeklyWorkingHours, BlackoutDate, AvailabilitySettings, DayOfWeek } from '@/types'
 import { WorkingHoursSection } from './_components/WorkingHoursSection'
 import { BookingSettingsSection } from './_components/BookingSettingsSection'
 import { BlackoutDatesSection } from './_components/BlackoutDatesSection'
 import { cn } from '@/lib/utils'
 import { Heading2 } from '@/components/typography/Heading2'
-import { useAvailabilityStore } from '@/stores/availability-store'
 
-const days: DayOfWeek[] = [
-    'monday',
-    'tuesday',
-    'wednesday',
-    'thursday',
-    'friday',
-    'saturday',
-    'sunday',
-]
-
-const dayLabels: Record<DayOfWeek, string> = {
-    monday: 'Monday',
-    tuesday: 'Tuesday',
-    wednesday: 'Wednesday',
-    thursday: 'Thursday',
-    friday: 'Friday',
-    saturday: 'Saturday',
-    sunday: 'Sunday',
-}
-
-const INITIAL_WORKING_HOURS = {
-    monday: { id: 0, isActive: true, startTime: '09:00', endTime: '17:00' },
-    tuesday: { id: 0, isActive: true, startTime: '09:00', endTime: '17:00' },
-    wednesday: { id: 0, isActive: true, startTime: '09:00', endTime: '17:00' },
-    thursday: { id: 0, isActive: true, startTime: '09:00', endTime: '17:00' },
-    friday: { id: 0, isActive: true, startTime: '09:00', endTime: '17:00' },
-    saturday: { id: 0, isActive: false, startTime: '09:00', endTime: '17:00' },
-    sunday: { id: 0, isActive: false, startTime: '09:00', endTime: '17:00' },
-}
+// Local imports
+import { useAvailabilityData } from './hooks/use-availability'
+import { useAvailabilityUI } from './hooks/use-availability-ui'
+import { DAYS, DAY_LABELS, SAVE_SUCCESS_TIMEOUT } from './constants/availability-contant'
+import { showSuccessMessage } from './utils/availability-util'
 
 export default function AvailabilityPage() {
-    const [workingHours, setWorkingHours] = useState(INITIAL_WORKING_HOURS)
-    const { get, updateRecurring, getRecurring } = useAvailabilityStore()
-    const [loading, setLoading] = useState(true)
+    // Custom hooks for separated concerns
+    const { state: dataState, actions: dataActions } = useAvailabilityData()
+    const { state: uiState, actions: uiActions } = useAvailabilityUI()
 
-    /// TODO:
-    const [blackoutDates, setBlackoutDates] = useState(mockBlackoutDates)
-    const [availabilitySettings, setAvailabilitySettings] = useState(mockAvailabilitySettings)
-    const [newBlackoutDate, setNewBlackoutDate] = useState('')
-    const [newBlackoutReason, setNewBlackoutReason] = useState('')
-    const [isSaving, setIsSaving] = useState(false)
-    const [saveSuccess, setSaveSuccess] = useState(false)
-    const [isEditing, setIsEditing] = useState(false)
-
-    const addBlackoutDate = () => {
-        if (newBlackoutDate && newBlackoutReason) {
-            setBlackoutDates((prev) => [
-                ...prev,
-                { id: Date.now(), date: newBlackoutDate, reason: newBlackoutReason },
-            ])
-            setNewBlackoutDate('')
-            setNewBlackoutReason('')
-        }
-    }
-
-    const removeBlackoutDate = (id: number) => {
-        setBlackoutDates((prev) => prev.filter((date) => date.id !== id))
-    }
-
+    // Main save handler - orchestrates UI and data operations
     const handleSave = async () => {
-        setIsSaving(true)
-        setSaveSuccess(false)
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1200))
-        setIsSaving(false)
-        setSaveSuccess(true)
-        setTimeout(() => setSaveSuccess(false), 2000)
-        // Here you would send workingHours, blackoutDates, and availabilitySettings to your backend
-    }
+        uiActions.startSaving()
 
-    const handleButtonClick = async () => {
-        if (!isEditing) {
-            setIsEditing(true)
-        } else {
-            setIsSaving(true)
-            setSaveSuccess(false)
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1200))
-            setIsSaving(false)
-            setSaveSuccess(true)
-            setIsEditing(false)
-            setTimeout(() => setSaveSuccess(false), 2000)
-            // Here you would send workingHours, blackoutDates, and availabilitySettings to your backend
-        }
-    }
-
-    // const handleSave = async () => {
-    //     // Update backend
-    //     try {
-    //         const dayData = workingHours[day]
-    //         await updateRecurring(dayData.id, { [field]: value })
-    //         console.log('✅ Updated successfully')
-    //     } catch (error) {
-    //         console.error('❌ Update failed:', error)
-    //         alert('Failed to update. Please try again.')
-    //     }
-    // }
-
-    const handleWorkingHoursChange = async (
-        day: DayOfWeek,
-        field: 'startTime' | 'endTime' | 'isActive',
-        value: string | boolean
-    ) => {
-        console.log('Updating:', day, field, value)
-
-        // Update UI immediately
-        setWorkingHours((prev) => ({
-            ...prev,
-            [day]: { ...prev[day], [field]: value },
-        }))
-
-        // Update backend
         try {
-            const dayData = workingHours[day]
-            await updateRecurring(dayData.id, { [field]: value })
-            console.log('✅ Updated successfully')
+            await dataActions.saveAllData()
+            await showSuccessMessage(uiActions.setSaveSuccess, SAVE_SUCCESS_TIMEOUT)
+            uiActions.finishSaving()
         } catch (error) {
-            console.error('❌ Update failed:', error)
-            alert('Failed to update. Please try again.')
+            console.error('❌ Save failed:', error)
+            alert('Failed to save changes. Please try again.')
+            uiActions.setIsSaving(false)
         }
     }
 
+    // Toggle between edit and save modes
+    const handleButtonClick = async () => {
+        if (!uiState.isEditing) {
+            uiActions.setIsEditing(true)
+        } else {
+            await handleSave()
+        }
+    }
+
+    // Load initial data on component mount
     useEffect(() => {
-        let isMounted = true
-
-        async function init() {
-            try {
-                setLoading(true)
-                const data = await getRecurring('cmee60fnz0001uyh48pclqnl7')
-
-                if (isMounted && data) {
-                    const merged = { ...INITIAL_WORKING_HOURS }
-
-                    // Handle array or object response
-                    if (Array.isArray(data)) {
-                        data.forEach((item) => {
-                            if (merged[item.day]) {
-                                merged[item.day] = item
-                            }
-                        })
-                    } else {
-                        Object.assign(merged, data)
-                    }
-                    setWorkingHours(merged)
-                }
-            } catch (error) {
-                console.error('Failed to fetch working hours:', error)
-            } finally {
-                if (isMounted) {
-                    setLoading(false)
-                }
-            }
-        }
-
-        init()
-
-        return () => {
-            isMounted = false
-        }
+        dataActions.loadInitialData(uiActions.setLoading)
     }, [])
 
     return (
         <div className="space-y-2 md:space-y-4">
+            {/* Header */}
             <div className="flex items-center justify-between">
                 <Heading2 className={cn('text-left text-gray-900')}>Availability Settings</Heading2>
-                <Button onClick={handleButtonClick} disabled={isSaving}>
-                    {isSaving ? (
+                <Button onClick={handleButtonClick} disabled={uiState.isSaving}>
+                    {uiState.isSaving ? (
                         <>
                             <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
                             Saving...
                         </>
-                    ) : isEditing ? (
+                    ) : uiState.isEditing ? (
                         <>
                             <Save className="h-4 w-4 mr-2" />
                             Save
                         </>
                     ) : (
-                        <>Update Availability</>
+                        'Update Availability'
                     )}
                 </Button>
             </div>
-            {saveSuccess && (
+
+            {/* Success Message */}
+            {uiState.saveSuccess && (
                 <div className="bg-green-100 text-green-800 px-4 py-2 rounded mb-2 text-center">
                     Changes saved successfully!
                 </div>
             )}
 
+            {/* Content Sections */}
             <WorkingHoursSection
-                days={days}
-                dayLabels={dayLabels}
-                workingHours={workingHours}
-                onChange={handleWorkingHoursChange}
-                disabled={!isEditing}
-                isLoading={loading}
+                days={DAYS}
+                dayLabels={DAY_LABELS}
+                workingHours={dataState.workingHours}
+                onChange={dataActions.updateWorkingHours}
+                disabled={!uiState.isEditing}
+                isLoading={uiState.loading}
             />
 
             <BookingSettingsSection
-                settings={availabilitySettings}
-                onChange={setAvailabilitySettings}
-                disabled={!isEditing}
+                settings={dataState.availabilitySettings}
+                onChange={dataActions.setAvailabilitySettings}
+                disabled={!uiState.isEditing}
             />
 
             <BlackoutDatesSection
-                blackoutDates={blackoutDates}
-                newDate={newBlackoutDate}
-                newReason={newBlackoutReason}
-                onDateChange={setNewBlackoutDate}
-                onReasonChange={setNewBlackoutReason}
-                onAdd={addBlackoutDate}
-                onRemove={removeBlackoutDate}
-                disabled={!isEditing}
+                blackoutDates={dataState.blackoutDates}
+                newDate={dataState.newBlackoutDate}
+                newReason={dataState.newBlackoutReason}
+                onDateChange={dataActions.setNewBlackoutDate}
+                onReasonChange={dataActions.setNewBlackoutReason}
+                onAdd={dataActions.addBlackoutDate}
+                onRemove={dataActions.removeBlackoutDate}
+                disabled={!uiState.isEditing}
             />
         </div>
     )

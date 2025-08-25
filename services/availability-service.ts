@@ -40,4 +40,19 @@ export class AvailabilityService {
             throw error
         }
     }
+
+    async bulkUpdateRecurring(id: string, data: {
+        dayOfWeek: number
+        isActive: boolean
+        startTime: string
+        endTime: string
+    }[]) {
+        try {
+            console.log('Updating recurring availability:', id, data, '============BULK UPDATE REQUEST SERVICE')
+            return await this.ctx.api.put(`/availabilities/recurring/bulk/${id}`, data)
+        } catch (error) {
+            console.error('Error updating recurring availability:', error)
+            throw error
+        }
+    }
 }

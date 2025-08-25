@@ -3,7 +3,8 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { availibilityService } from '@/services'
 import { Availability, WeeklyWorkingHours } from '@/types/availability-type'
-import { getNumberToDays } from '@/lib/utils/date-util'
+import { getNumberToDays, getDaysToNumber } from '@/lib/utils/date-util'
+import { INITIAL_WORKING_HOURS } from '@/app/dashboard/availability/constants/availability-contant'
 
 export interface IAvailabilityState {
     data: Availability['singleAvailability']
@@ -14,6 +15,7 @@ export interface IAvailabilityActions {
     get: (id: string, params?: { startDate?: string; endDate?: string }) => Promise<any>
     getRecurring: (id: string) => Promise<any>
     updateRecurring: (id: number, data: any) => Promise<any>
+    bulkUpdateRecurring: (id: string, data: typeof INITIAL_WORKING_HOURS) => Promise<any>
     create: (availability: {
         date: Date
         startTime: string
@@ -61,14 +63,27 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
 
                     response.data.map((item) => {
                         const day = getNumberToDays(item.dayOfWeek)
-                        const startDate = DateTime.fromISO(item.startTime)
-                        const endDate = DateTime.fromISO(item.endTime)
+                        
+                        console.log(`API returned for ${day}: startTime=${item.startTime}, endTime=${item.endTime}`)
+                        
+                        // Use times as they are, only convert if they're in ISO format
+                        let startTime = item.startTime
+                        let endTime = item.endTime
+                        
+                        if (item.startTime.includes('T')) {
+                            startTime = DateTime.fromISO(item.startTime, { zone: 'local' }).toFormat('HH:mm')
+                        }
+                        if (item.endTime.includes('T')) {
+                            endTime = DateTime.fromISO(item.endTime, { zone: 'local' }).toFormat('HH:mm')
+                        }
+
+                        console.log(`Final ${day}: startTime=${startTime}, endTime=${endTime}`)
 
                         formattedResponse[day] = {
                             id: item.id,
                             isActive: item.isActive,
-                            startTime: startDate.toLocaleString(DateTime.TIME_24_SIMPLE),
-                            endTime: endDate.toLocaleString(DateTime.TIME_24_SIMPLE),
+                            startTime: startTime,
+                            endTime: endTime,
                         }
                     })
 
@@ -90,13 +105,44 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
                         recurringData: {
                             ...state.recurringData,
                             [getNumberToDays(data.dayOfWeek)]: {
-                                enabled: data.isActive,
+                                isActive: data.isActive,
                                 startTime: data.startTime,
                                 endTime: data.endTime,
                             },
                         },
                     }))
 
+                    return response
+                } catch (error) {
+                    console.error('Error updating recurring availability:', error)
+                    throw error
+                }
+            },
+            bulkUpdateRecurring: async (id: string, data: typeof INITIAL_WORKING_HOURS) => {
+                try {
+                    // Convert the working hours data to the format expected by the API
+                    const reqUpdate = Object.entries(data).map(([day, dayData]) => {
+                        console.log(`Sending ${day}: startTime=${dayData.startTime}, endTime=${dayData.endTime}`)
+                        
+                        return {
+                            dayOfWeek: getDaysToNumber(day),
+                            isActive: dayData.isActive,
+                            startTime: dayData.startTime,
+                            endTime: dayData.endTime,
+                        }
+                    })
+                    
+                    const response = await availibilityService.bulkUpdateRecurring(id, reqUpdate)
+
+                    // Update the store with all the new data
+                    set((state) => ({
+                        recurringData: {
+                            ...state.recurringData,
+                            ...data, // Use the original data structure to update the store
+                        },
+                    }))
+                    
+                    console.log(response, '============BULK UPDATE RESPONSE')
                     return response
                 } catch (error) {
                     console.error('Error updating recurring availability:', error)
